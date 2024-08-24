@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleDoubleClick(event) {
         const target = event.target;
 
-        if (target.classList.contains('objective') || target.classList.contains('step') || target.classList.contains('sub-step')) {
+        if (target.classList.contains('objective_text') || target.classList.contains('step') || target.classList.contains('sub-step')) {
             const originalText = target.textContent;
             target.classList.add('editable');
             target.contentEditable = true;

@@ -98,3 +98,11 @@ body {
 .dragging {
     opacity: 0.5;
 }
+
+.editable {
+    outline: 1px solid #27ae60; /* Add an outline to indicate editable state */
+    background-color: #444; /* Background color when editing */
+    color: #fff; /* Text color when editing */
+    padding: 5px; /* Add some padding to make the editable area more noticeable */
+    border-radius: 3px; /* Optional: add rounded corners */
+}
