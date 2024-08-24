@@ -115,6 +115,73 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function handleDragStart(event) {
+        event.target.classList.add('dragging');
+        event.dataTransfer.setData('text/plain', event.target.dataset.id);
+    }
+
+    function handleDragEnd(event) {
+        event.target.classList.remove('dragging');
+    }
+
+    function handleDragOver(event) {
+        event.preventDefault();
+        const target = event.target;
+        const draggingElement = document.querySelector('.dragging');
+        const isDraggingSubStep = draggingElement.classList.contains('sub-step');
+        const targetIsStep = target.classList.contains('step');
+        const targetIsSubStep = target.classList.contains('sub-step');
+
+        if (isDraggingSubStep && (targetIsStep || targetIsSubStep)) {
+            // Prevent sub-step from being dropped outside its parent step
+            if (targetIsStep || (targetIsSubStep && target.closest('.step') === draggingElement.closest('.step'))) {
+                const afterElement = getDragAfterElement(target, event.clientY);
+                const container = target.parentElement;
+                if (afterElement == null) {
+                    container.appendChild(draggingElement);
+                } else {
+                    container.insertBefore(draggingElement, afterElement);
+                }
+            }
+        } else if (targetIsStep) {
+            // Allow reordering steps
+            const afterElement = getDragAfterElement(target, event.clientY);
+            const container = target.parentElement;
+            if (afterElement == null) {
+                container.appendChild(draggingElement);
+            } else {
+                container.insertBefore(draggingElement, afterElement);
+            }
+        }
+    }
+
+    function handleDrop(event) {
+        event.preventDefault();
+        handleDragEnd(event);
+    }
+
+    function getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll('.step, .sub-step')].filter(el => el !== document.querySelector('.dragging'));
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
     document.querySelector('.objectives').addEventListener('dblclick', handleDoubleClick);
     document.querySelector('.objectives').addEventListener('click', handleClick);
+
+    // Enable drag and drop
+    document.querySelectorAll('.step, .sub-step').forEach(item => {
+        item.addEventListener('dragstart', handleDragStart);
+        item.addEventListener('dragend', handleDragEnd);
+        item.addEventListener('dragover', handleDragOver);
+        item.addEventListener('drop', handleDrop);
+        item.setAttribute('draggable', true);
+    });
 });

@@ -94,3 +94,7 @@ body {
 .complete-quest-button:hover {
     background-color: #2ecc71;
 }
+
+.dragging {
+    opacity: 0.5;
+}
