@@ -1,92 +1,94 @@
-document.querySelectorAll('.objective').forEach(objective => {
-    const steps = objective.querySelectorAll('.step');
-    const progressBar = objective.querySelector('.progress');
-    
-    // Function to update the progress bar of the objective
-    const updateObjectiveProgress = () => {
-        const totalSteps = steps.length;
-        let completedSteps = 0;
+document.addEventListener('DOMContentLoaded', () => {
+    function updateObjectiveProgress(objective) {
+        const steps = objective.querySelectorAll('.step');
+        let totalNodes = 0;
+        let completedNodes = 0;
 
         steps.forEach(step => {
-            if (step.style.textDecoration === 'line-through') {
-                completedSteps++;
+            const subSteps = step.querySelectorAll('.sub-step');
+            if(subSteps.length==0){
+                totalNodes += 1
+                if(step.style.textDecoration === 'line-through'){
+                    completedNodes++;
+                }
+            }else{
+                // Count completed sub-steps
+                const completedSubSteps = Array.from(subSteps).filter(subStep => subStep.style.textDecoration === 'line-through').length;
+                completedNodes += completedSubSteps;
+                // Check if step is completed
             }
+            totalNodes += subSteps.length; 
+
         });
 
-        const progressPercentage = (completedSteps / totalSteps) * 100;
-        progressBar.style.width = progressPercentage + '%';
-    };
+        // Update progress bar
+        const objectiveProgress = objective.querySelector('.progress');
+        const totalNodesCount = totalNodes; // Total nodes (including steps and sub-steps)
+        const progressPercentage = totalNodesCount === 0 ? 0 : (completedNodes / totalNodesCount) * 100;
+        objectiveProgress.style.width = progressPercentage + '%';
+    }
 
-    steps.forEach(step => {
+    function updateStepProgress(step) {
         const subSteps = step.querySelectorAll('.sub-step');
-        let completedSubSteps = 0;
+        const completedSubSteps = Array.from(subSteps).filter(subStep => subStep.style.textDecoration === 'line-through').length;
+        const allSubStepsCompleted = subSteps.length === completedSubSteps;
 
-        // Function to update the parent step's progress
-        const updateParentProgress = () => {
-            const totalSubSteps = subSteps.length;
-            if (totalSubSteps === 0) return; // No sub-steps to update
+        // Mark the step as done if all sub-steps are completed
+        if (allSubStepsCompleted) {
+            step.style.textDecoration = 'line-through';
+            step.style.color = '#aaa';
+        } else {
+            step.style.textDecoration = '';
+            step.style.color = '#ccc';
+        }
+    }
 
-            const progressPercentage = (completedSubSteps / totalSubSteps) * 100;
-            const progressElement = step.querySelector('.progress');
+    document.querySelector('.objectives').addEventListener('click', (event) => {
+        const objective = event.target.closest('.objective');
+        if (!objective) return; // Ignore clicks outside objectives
 
-            if (progressElement) {
-                progressElement.style.width = progressPercentage + '%';
+        if (event.target.classList.contains('sub-step')) {
+            const subStep = event.target;
+            const step = subStep.closest('.step');
+            const subSteps = step.querySelectorAll('.sub-step');
+
+            // Toggle the sub-step
+            if (subStep.style.textDecoration === 'line-through') {
+                subStep.style.textDecoration = '';
+                subStep.style.color = '#ccc';
+            } else {
+                subStep.style.textDecoration = 'line-through';
+                subStep.style.color = '#aaa';
             }
 
-            // Mark the parent step as done if all sub-steps are done
-            if (completedSubSteps === totalSubSteps) {
-                step.style.textDecoration = 'line-through';
-                step.style.color = '#aaa';
-            } else {
+            // Update step and objective progress
+            updateStepProgress(step);
+            updateObjectiveProgress(objective);
+        }
+
+        if (event.target.classList.contains('step')) {
+            const step = event.target;
+            const subSteps = step.querySelectorAll('.sub-step');
+
+            // Toggle the step
+            if (step.style.textDecoration === 'line-through') {
                 step.style.textDecoration = '';
                 step.style.color = '#ccc';
-            }
-
-            // Update the objective progress bar
-            updateObjectiveProgress();
-        };
-
-        // Add event listeners to sub-steps
-        subSteps.forEach(subStep => {
-            subStep.addEventListener('click', () => {
-                // Toggle the sub-step
-                if (subStep.style.textDecoration === 'line-through') {
+                subSteps.forEach(subStep => {
                     subStep.style.textDecoration = '';
                     subStep.style.color = '#ccc';
-                    completedSubSteps--; // Decrease completed sub-steps count
-                } else {
+                });
+            } else {
+                step.style.textDecoration = 'line-through';
+                step.style.color = '#aaa';
+                subSteps.forEach(subStep => {
                     subStep.style.textDecoration = 'line-through';
                     subStep.style.color = '#aaa';
-                    completedSubSteps++; // Increase completed sub-steps count
-                }
+                });
+            }
 
-                // Update parent step progress
-                updateParentProgress();
-            });
-        });
-
-        // Initialize progress for steps with sub-steps
-        updateParentProgress();
-    });
-
-    // Add event listeners to steps
-    steps.forEach(step => {
-        if (step.querySelectorAll('.sub-step').length === 0) {
-            step.addEventListener('click', () => {
-                if (step.style.textDecoration === 'line-through') {
-                    step.style.textDecoration = '';
-                    step.style.color = '#ccc';
-                } else {
-                    step.style.textDecoration = 'line-through';
-                    step.style.color = '#aaa';
-                }
-
-                // Update the objective progress bar
-                updateObjectiveProgress();
-            });
+            // Update objective progress
+            updateObjectiveProgress(objective);
         }
     });
-
-    // Initial progress update for objectives
-    updateObjectiveProgress();
 });
