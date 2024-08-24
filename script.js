@@ -6,19 +6,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         steps.forEach(step => {
             const subSteps = step.querySelectorAll('.sub-step');
-            if(subSteps.length==0){
-                totalNodes += 1
+            if(subSteps.length == 0){
+                totalNodes += 1;
                 if(step.style.textDecoration === 'line-through'){
                     completedNodes++;
                 }
-            }else{
+            } else {
                 // Count completed sub-steps
                 const completedSubSteps = Array.from(subSteps).filter(subStep => subStep.style.textDecoration === 'line-through').length;
                 completedNodes += completedSubSteps;
-                // Check if step is completed
             }
-            totalNodes += subSteps.length; 
-
+            totalNodes += subSteps.length;
         });
 
         // Update progress bar
@@ -43,7 +41,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    document.querySelector('.objectives').addEventListener('click', (event) => {
+    function handleDoubleClick(event) {
+        const target = event.target;
+
+        if (target.classList.contains('objective') || target.classList.contains('step') || target.classList.contains('sub-step')) {
+            const originalText = target.textContent;
+            target.classList.add('editable');
+            target.contentEditable = true;
+            target.focus();
+
+            // Disable click handling while editing
+            document.querySelector('.objectives').removeEventListener('click', handleClick);
+            
+            target.addEventListener('blur', function () {
+                if (target.textContent.trim() === '') {
+                    target.textContent = originalText; // Revert if empty
+                }
+                target.classList.remove('editable');
+                target.contentEditable = false;
+
+                // Re-enable click handling after editing
+                document.querySelector('.objectives').addEventListener('click', handleClick);
+            }, { once: true });
+        }
+    }
+
+    function handleClick(event) {
         const objective = event.target.closest('.objective');
         if (!objective) return; // Ignore clicks outside objectives
 
@@ -90,5 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update objective progress
             updateObjectiveProgress(objective);
         }
-    });
+    }
+
+    document.querySelector('.objectives').addEventListener('dblclick', handleDoubleClick);
+    document.querySelector('.objectives').addEventListener('click', handleClick);
 });
