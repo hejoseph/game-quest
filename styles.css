@@ -1,12 +1,17 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: auto; /* Allow the body to scroll if content overflows */
+}
+
 body {
     font-family: Arial, sans-serif;
     background-color: #282c34;
     color: #ffffff;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+    align-items: flex-start; /* Align items at the top */
+    min-height: 100vh; /* Ensure the body covers the full viewport height */
 }
 
 .quest-container {
@@ -16,6 +21,8 @@ body {
     width: 400px;
     padding: 20px;
     text-align: center;
+    box-sizing: border-box; /* Include padding in the total width/height */
+    margin: 20px; /* Add some margin to prevent content from touching edges */
 }
 
 .quest-title {
@@ -71,6 +78,7 @@ body {
 
 .objectives li {
     margin-bottom: 5px;
+    cursor: pointer; /* Indicate that the item is clickable */
 }
 
 .complete-quest-button {
