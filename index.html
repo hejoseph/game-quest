@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Quest Interface with Progress Bars</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="quest-container">
+        <h1 class="quest-title">Dragon Slayer Quest</h1>
+        <p class="quest-description">You have been chosen to slay the fearsome dragon terrorizing the village. Prepare yourself for the ultimate battle!</p>
+        
+        <div class="objectives">
+            <h2>Objectives:</h2>
+            <div class="objective">
+                <p>Find the dragon's lair in the Dark Forest.</p>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 0%;"></div>
+                </div>
+                <ul>
+                    <li>Talk to the village elder</li>
+                    <li>Get the map from the merchant</li>
+                    <li>Enter the Dark Forest</li>
+                </ul>
+            </div>
+
+            <div class="objective">
+                <p>Collect a magic sword from the ancient ruins.</p>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 0%;"></div>
+                </div>
+                <ul>
+                    <li>Find the hidden entrance</li>
+                    <li>Solve the ancient riddle</li>
+                    <li>Retrieve the sword</li>
+                </ul>
+            </div>
+
+            <div class="objective">
+                <p>Slay the dragon.</p>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 0%;"></div>
+                </div>
+                <ul>
+                    <li>Confront the dragon</li>
+                    <li>Use the magic sword</li>
+                    <li>Defeat the dragon</li>
+                </ul>
+            </div>
+
+            <div class="objective">
+                <p>Return to the village with proof of the dragon's demise.</p>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 0%;"></div>
+                </div>
+                <ul>
+                    <li>Collect a dragon scale</li>
+                    <li>Travel back to the village</li>
+                    <li>Present the proof to the elder</li>
+                </ul>
+            </div>
+        </div>
+
+        <button class="complete-quest-button">Complete Quest</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
