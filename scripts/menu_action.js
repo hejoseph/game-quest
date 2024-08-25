@@ -163,4 +163,58 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       subStepsList.insertAdjacentHTML('beforeend', subStepHTML);
   }
+
+
+  const toggleIcons = document.querySelectorAll('.toggle-visibility');
+
+    // Loop through each toggle icon
+    toggleIcons.forEach(icon => {
+        icon.addEventListener('click', () => {
+            // Get the closest parent .objective div
+            const objectiveDiv = icon.closest('.objective');
+            
+            // Get the .steps element within the current .objective
+            const stepsList = objectiveDiv.querySelector('.steps');
+            
+            // Toggle the display of the steps list
+            if (stepsList.style.display === 'none') {
+                stepsList.style.display = 'block'; // Show steps
+                icon.src = 'images/hide.svg'; // Change icon to "hide"
+                icon.alt = 'Hide';
+            } else {
+                stepsList.style.display = 'none'; // Hide steps
+                icon.src = 'images/show.svg'; // Change icon to "show"
+                icon.alt = 'Show';
+            }
+        });
+    });
+
+
+    // Add Objective
+  const addObjectiveButton = document.querySelector('.add-objective-button');
+  addObjectiveButton.addEventListener('click', addObjective);
+
+  function addObjective() {
+      const objectivesContainer = document.querySelector('.objectives');
+      const newObjective = document.createElement('div');
+      newObjective.classList.add('objective');
+
+      newObjective.innerHTML = `
+          <p class="objective_text" contenteditable="true">New Objective</p>
+          <span class="material-icons-round">drag_indicator</span>
+          <div class="progress-bar">
+              <div class="progress" style="width: 0%;"></div>
+          </div>
+          <ul>
+              <!-- Steps will be added here -->
+          </ul>
+          <button class="add-step-button gamify-button">Add Step</button>
+      `;
+
+      objectivesContainer.appendChild(newObjective);
+
+      // Attach event listener to the new "Add Step" button
+      newObjective.querySelector('.add-step-button').addEventListener('click', () => addStep(newObjective));
+  }
+
 });
