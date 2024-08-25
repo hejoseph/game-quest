@@ -90,7 +90,14 @@
       </div>
     </div>
 
-    <button class="add-quest-button">Add Quest</button>
+    <!-- <button class="add-objective-button">
+        <span class="material-icons-round button-icon">add_circle</span>
+        Add Objective
+    </button> -->
+  
+
+    <button class="add-objective-button gamify-button">Add Objective</button>
+
   </div>
 
   <script>
@@ -100,8 +107,8 @@
     let initY = 0;
 
     const container = document.querySelector(".objectives");
-    container.style.width = container.offsetWidth + "px";
-    container.style.height = container.offsetHeight + "px";
+    // container.style.width = container.offsetWidth + "px";
+    // container.style.height = container.offsetHeight + "px";
 
     document.addEventListener("mousedown", (e) => {
       if (e.target.matches("span.material-icons-round")) {

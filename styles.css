@@ -178,3 +178,65 @@ p, li {
   width: 20px;
   height: 20px;
 }
+
+/* Gamified Button Styles */
+.add-objective-button,
+.add-step-button,
+.add-substep-button {
+    background-color: #f39c12;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-objective-button:hover,
+.add-step-button:hover,
+.add-substep-button:hover {
+    background-color: #e67e22;
+    transform: scale(1.05);
+}
+
+.add-objective-button:active,
+.add-step-button:active,
+.add-substep-button:active {
+    background-color: #d35400;
+    transform: scale(1);
+}
+
+.button-icon {
+    margin-right: 8px;
+    font-size: 20px;
+    vertical-align: middle;
+}
+
+.gamify-button {
+  background-color: #ffcc00; /* Bright, eye-catching yellow */
+  color: #333; /* Dark text color for contrast */
+  padding: 10px 20px;
+  border: 2px solid #b38f00; /* Slightly darker border */
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 4px #b38f00; /* 3D effect with shadow */
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: 10px; /* Add some space above the button */
+}
+
+.gamify-button:hover {
+  transform: translateY(-3px); /* Lift button on hover */
+  box-shadow: 0 8px #b38f00; /* Increase shadow size */
+}
+
+.gamify-button:active {
+  transform: translateY(2px); /* Press down effect */
+  box-shadow: 0 2px #b38f00; /* Reduce shadow */
+}

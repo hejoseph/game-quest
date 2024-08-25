@@ -1,4 +1,73 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+
+  // Add Objective
+  const addObjectiveButton = document.querySelector('.add-objective-button');
+  addObjectiveButton.addEventListener('click', addObjective);
+
+  function addObjective() {
+      const objectivesContainer = document.querySelector('.objectives');
+      const newObjective = document.createElement('div');
+      newObjective.classList.add('objective');
+
+      newObjective.innerHTML = `
+          <p class="objective_text" contenteditable="true">New Objective</p>
+          <span class="material-icons-round">drag_indicator</span>
+          <div class="progress-bar">
+              <div class="progress" style="width: 0%;"></div>
+          </div>
+          <ul>
+              <!-- Steps will be added here -->
+          </ul>
+          <button class="add-step-button gamify-button">Add Step</button>
+      `;
+
+      objectivesContainer.appendChild(newObjective);
+
+      // Attach event listener to the new "Add Step" button
+      newObjective.querySelector('.add-step-button').addEventListener('click', () => addStep(newObjective));
+  }
+
+  function addStep(objective) {
+      const stepsList = objective.querySelector('ul');
+      const newStep = document.createElement('li');
+      newStep.classList.add('step');
+
+      newStep.innerHTML = `
+          <span class="step_text" contenteditable="true">New Step</span>
+          <span class="coin-input">
+              <input type="number" min="0" placeholder="Coins" class="coin-number">
+              <img class="coin_img" src="images/coin.svg" alt="coin">
+          </span>
+          <button class="add-substep-button gamify-button">Add Sub-step</button>
+          <ul class="sub-steps"></ul>
+      `;
+
+      stepsList.appendChild(newStep);
+
+      // Attach event listener to the new "Add Sub-step" button
+      newStep.querySelector('.add-substep-button').addEventListener('click', () => addSubStep(newStep));
+  }
+
+  function addSubStep(step) {
+      const subStepsList = step.querySelector('.sub-steps');
+      const newSubStep = document.createElement('li');
+      newSubStep.classList.add('sub-step');
+
+      newSubStep.innerHTML = `
+          <span class="sub-step_text" contenteditable="true">New Sub-step</span>
+          <span class="coin-input">
+              <input type="number" min="0" placeholder="Coins" class="coin-number">
+              <img class="coin_img" src="images/coin.svg" alt="coin">
+          </span>
+      `;
+
+      subStepsList.appendChild(newSubStep);
+  }
+
+
+
+
   function updateObjectiveProgress(objective) {
     const steps = objective.querySelectorAll(".step");
     let totalNodes = 0;
