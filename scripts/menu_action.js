@@ -85,57 +85,81 @@ document.querySelectorAll(".drag").forEach((element) => {
   });
 });
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
+  function toggleEditLockIcon(element){
+    console.log(element.src);
+    // Check if currently in edit mode by checking the current icon src or a data attribute
+    const isEditMode = element.src.includes("edit");
+
+    // Toggle the mode
+    if (isEditMode) {
+        // Switch to lock mode
+        element.src = "images/lock.svg"; // Set to lock icon
+        
+    } else {
+        // Switch to edit mode
+        element.src = "images/edit.svg"; // Set to edit icon
+    }
+  }
 
   function toggleEditMode(objectiveElement, enable) {
-      const actionButtons = objectiveElement.querySelectorAll('.add-step-button, .add-sub-step-button');
-      const textElements = objectiveElement.querySelectorAll('.objective_text, .step_text, .sub-step_text, .coin_number');
-      const deleteButtons = objectiveElement.querySelectorAll('.delete-step, .delete-sub-step');
-      
-      if (enable) {
-          objectiveElement.classList.add('edit-mode');
-          textElements.forEach(el => el.setAttribute('contenteditable', 'true'));
-      } else {
-          objectiveElement.classList.remove('edit-mode');
-          textElements.forEach(el => el.setAttribute('contenteditable', 'false'));
-      }
+    const actionButtons = objectiveElement.querySelectorAll(
+      ".add-step-button, .add-sub-step-button"
+    );
+    const textElements = objectiveElement.querySelectorAll(
+      ".objective_text, .step_text, .sub-step_text, .coin_number"
+    );
+    const deleteButtons = objectiveElement.querySelectorAll(
+      ".delete-step, .delete-sub-step"
+    );
 
-      deleteButtons.forEach(btn => btn.style.display = enable ? 'inline' : 'none');
+    if (enable) {
+      objectiveElement.classList.add("edit-mode");
+      textElements.forEach((el) => el.setAttribute("contenteditable", "true"));
+    } else {
+      objectiveElement.classList.remove("edit-mode");
+      textElements.forEach((el) => el.setAttribute("contenteditable", "false"));
+    }
+
+    deleteButtons.forEach(
+      (btn) => (btn.style.display = enable ? "inline" : "none")
+    );
   }
 
   // Event delegation for handling clicks on edit buttons
-  document.body.addEventListener('click', (event) => {
-      if (event.target.classList.contains('edit-button')) {
-          const objectiveElement = event.target.closest('.objective');
-          const isEditing = objectiveElement.classList.contains('edit-mode');
-          toggleEditMode(objectiveElement, !isEditing);
-      } else if (event.target.classList.contains('add-step-button')) {
-          const objectiveElement = event.target.closest('.objective');
-          addStep(objectiveElement);
-      } else if (event.target.classList.contains('add-sub-step-button')) {
-          const stepElement = event.target.closest('.step');
-          addSubStep(stepElement);
-      } else if (event.target.classList.contains('delete-step')) {
-          // if (confirm('Are you sure you want to delete this step?')) {
-          //     event.target.closest('.step').remove();
-          // }
-      } else if (event.target.classList.contains('delete-sub-step')) {
-          // if (confirm('Are you sure you want to delete this sub-step?')) {
-          //     event.target.closest('.sub-step').remove();
-          // }
-      }
+  document.body.addEventListener("click", (event) => {
+    if (event.target.classList.contains("edit-button")) {
+      const objectiveElement = event.target.closest(".objective");
+      const isEditing = objectiveElement.classList.contains("edit-mode");
+      toggleEditLockIcon(event.target);
+      toggleEditMode(objectiveElement, !isEditing);
+    } else if (event.target.classList.contains("add-step-button")) {
+      const objectiveElement = event.target.closest(".objective");
+      addStep(objectiveElement);
+    } else if (event.target.classList.contains("add-sub-step-button")) {
+      const stepElement = event.target.closest(".step");
+      addSubStep(stepElement);
+    } else if (event.target.classList.contains("delete-step")) {
+      // if (confirm('Are you sure you want to delete this step?')) {
+      //     event.target.closest('.step').remove();
+      // }
+    } else if (event.target.classList.contains("delete-sub-step")) {
+      // if (confirm('Are you sure you want to delete this sub-step?')) {
+      //     event.target.closest('.sub-step').remove();
+      // }
+    }
   });
 
   // Function to generate a new unique ID
   function generateUniqueId(prefix) {
-      return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   }
 
   // Function to add a new step
   function addStep(objectiveElement) {
-      const stepsList = objectiveElement.querySelector('.steps');
-      const stepId = generateUniqueId('step');
-      const stepHTML = `
+    const stepsList = objectiveElement.querySelector(".steps");
+    const stepId = generateUniqueId("step");
+    const stepHTML = `
           <li class="step" data-id="${stepId}">
               <span class="step_text" contenteditable="true">New Step</span> 
               <span class="coin"><span class="coin_number" contenteditable="true">0</span><img class="coin_img" src="images/coin.svg"></span>
@@ -147,74 +171,104 @@ document.addEventListener('DOMContentLoaded', () => {
               
           </li>
       `;
-      stepsList.insertAdjacentHTML('beforeend', stepHTML);
+    stepsList.insertAdjacentHTML("beforeend", stepHTML);
   }
 
   // Function to add a new sub-step
   function addSubStep(stepElement) {
-      const subStepsList = stepElement.querySelector('.sub-steps');
-      const subStepId = generateUniqueId('sub-step');
-      const subStepHTML = `
+    const subStepsList = stepElement.querySelector(".sub-steps");
+    const subStepId = generateUniqueId("sub-step");
+    const subStepHTML = `
           <li class="sub-step" data-id="${subStepId}">
               <span class="sub-step_text" contenteditable="true">New Sub-Step</span>
               <span class="coin"><span class="coin_number" contenteditable="true">0</span><img class="coin_img" src="images/coin.svg"></span>
               <img src="images/delete.svg" alt="Delete" class="delete-sub-step" />
           </li>
       `;
-      subStepsList.insertAdjacentHTML('beforeend', subStepHTML);
+    subStepsList.insertAdjacentHTML("beforeend", subStepHTML);
   }
 
-
-  const toggleIcons = document.querySelectorAll('.toggle-visibility');
+  function refreshHookMiniMaximize() {
+    const toggleIcons = document.querySelectorAll(".toggle-visibility");
 
     // Loop through each toggle icon
-    toggleIcons.forEach(icon => {
-        icon.addEventListener('click', () => {
-            // Get the closest parent .objective div
-            const objectiveDiv = icon.closest('.objective');
-            
-            // Get the .steps element within the current .objective
-            const stepsList = objectiveDiv.querySelector('.steps');
-            
-            // Toggle the display of the steps list
-            if (stepsList.style.display === 'none') {
-                stepsList.style.display = 'block'; // Show steps
-                icon.src = 'images/hide.svg'; // Change icon to "hide"
-                icon.alt = 'Hide';
-            } else {
-                stepsList.style.display = 'none'; // Hide steps
-                icon.src = 'images/show.svg'; // Change icon to "show"
-                icon.alt = 'Show';
-            }
-        });
+    toggleIcons.forEach((icon) => {
+      icon.addEventListener("click", () => {
+        // Get the closest parent .objective div
+        const objectiveDiv = icon.closest(".objective");
+
+        // Get the .steps element within the current .objective
+        const stepsList = objectiveDiv.querySelector(".steps");
+        const addStepBtn = objectiveDiv.querySelector(".add-step-button");
+
+        // Toggle the display of the steps list
+        if (stepsList.style.display === "none") {
+          stepsList.style.display = "block"; // Show steps
+          // addStepBtn.style.display = "block";
+          icon.src = "images/hide.svg"; // Change icon to "hide"
+          icon.alt = "Hide";
+        } else {
+          stepsList.style.display = "none"; // Hide steps
+          // addStepBtn.style.display = "block";
+          icon.src = "images/show.svg"; // Change icon to "show"
+          icon.alt = "Show";
+        }
+      });
     });
+  }
+  refreshHookMiniMaximize();
 
-
-    // Add Objective
-  const addObjectiveButton = document.querySelector('.add-objective-button');
-  addObjectiveButton.addEventListener('click', addObjective);
+  // Add Objective
+  const addObjectiveButton = document.querySelector(".add-objective-button");
+  addObjectiveButton.addEventListener("click", addObjective);
 
   function addObjective() {
-      const objectivesContainer = document.querySelector('.objectives');
-      const newObjective = document.createElement('div');
-      newObjective.classList.add('objective');
+    const objectivesContainer = document.querySelector(".objectives");
+    const newObjective = document.createElement("div");
+    newObjective.classList.add("objective");
 
-      newObjective.innerHTML = `
+    newObjective.innerHTML = `
           <p class="objective_text" contenteditable="true">New Objective</p>
-          <span class="material-icons-round">drag_indicator</span>
+          <div class="menu_container">
+          <div class="menu_action">
+            <img src="images/hide.svg" alt="Hide" class="toggle-visibility"/>
+            <img src="images/edit.svg" alt="Edit" class="edit-button"/>
+            <img src="images/delete.svg" class="delete-objective" alt="Delete_objective" />
+            <img class="drag" src="images/drag.svg" alt="Drag" draggable="false"/>
+          </div>
+        </div>
           <div class="progress-bar">
               <div class="progress" style="width: 0%;"></div>
           </div>
-          <ul>
-              <!-- Steps will be added here -->
+          <ul class="steps">
+            <li class="step" data-id="1-1">
+              <span class="step_text" contenteditable="false">New Step</span>
+              <span class="coin"><span class="coin_number" contenteditable="false">0</span><img class="coin_img" src="images/coin.svg"></span>
+              <img src="images/delete.svg" alt="Delete" class="delete-step" />
+              <ul class="sub-steps">
+                <li class="sub-step" data-id="1-1-1">
+                  <span class="sub-step_text" contenteditable="false">New Sub Step</span>
+                  <span class="coin"><span class="coin_number" contenteditable="false">0</span><img class="coin_img" src="images/coin.svg"></span>
+                  <img src="images/delete.svg" alt="Delete" class="delete-sub-step" />
+                </li>
+              </ul>
+              <button class="add-sub-step-button">Add Sub-Step</button>
+              
+            </li>
           </ul>
-          <button class="add-step-button gamify-button">Add Step</button>
+          <button class="add-step-button">Add Step</button>
       `;
 
-      objectivesContainer.appendChild(newObjective);
+    objectivesContainer.appendChild(newObjective);
 
-      // Attach event listener to the new "Add Step" button
-      newObjective.querySelector('.add-step-button').addEventListener('click', () => addStep(newObjective));
+    // Attach event listener to the new "Add Step" button
+    // newObjective
+    //   .querySelector(".add-step-button")
+    //   .addEventListener("click", () => addStep(newObjective));
+
+    refreshHookMiniMaximize();
+    if (typeof window.refreshDeleteObjectiveHook === "function") {
+      window.refreshDeleteObjectiveHook();
+    }
   }
-
 });
