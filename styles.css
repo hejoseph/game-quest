@@ -154,7 +154,7 @@ p, li {
     margin-bottom: 5px;
     cursor: pointer; /* Indicate that the item is clickable */
 }
-
+/* 
 .add-quest-button {
     background-color: #27ae60;
     color: white;
@@ -167,19 +167,13 @@ p, li {
 
 .add-quest-button:hover {
     background-color: #2ecc71;
-}
+} */
 
 .dragging {
     opacity: 0.5;
 }
 
-.editable {
-    outline: 1px solid #27ae60; /* Add an outline to indicate editable state */
-    background-color: #444; /* Background color when editing */
-    color: #fff; /* Text color when editing */
-    padding: 5px; /* Add some padding to make the editable area more noticeable */
-    border-radius: 3px; /* Optional: add rounded corners */
-}
+
 
 .coin{
   margin-left:10px;
@@ -192,7 +186,7 @@ p, li {
 }
 
 /* Gamified Button Styles */
-.add-objective-button,
+/* .add-objective-button,
 .add-step-button,
 .add-substep-button {
     background-color: #f39c12;
@@ -221,7 +215,7 @@ p, li {
 .add-substep-button:active {
     background-color: #d35400;
     transform: scale(1);
-}
+} */
 
 .button-icon {
     margin-right: 8px;
@@ -292,4 +286,66 @@ p, li {
 
 .menu_action img:active {
     transform: scale(0.9); /* Slightly shrink icon when clicked */
+}
+
+.editable {
+  outline: 1px solid #27ae60; /* Outline for editable areas */
+  background-color: #444; /* Background color for editing */
+  color: #fff; /* Text color for editing */
+  padding: 5px; /* Padding for better visibility */
+  border-radius: 3px; /* Rounded corners */
+}
+
+span[contenteditable="true"] {
+  border: 1px dashed #27ae60; /* Dashed border for editable areas */
+  padding: 2px 5px;
+  border-radius: 3px;
+  cursor: text; /* Cursor indicating text input */
+}
+
+span[contenteditable="true"]:focus {
+  background-color: #555; /* Darker background when focused */
+}
+
+
+.add-step-button,
+.add-sub-step-button {
+    background-color: #f39c12;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.add-step-button:hover,
+.add-sub-step-button:hover {
+    background-color: #e67e22;
+}
+
+.add-step-button:active,
+.add-sub-step-button:active {
+    background-color: #d35400;
+}
+
+/* Initially hide the buttons */
+.add-step-button,
+.add-sub-step-button {
+    display: none;
+}
+
+/* Show buttons when in edit mode */
+.edit-mode .add-step-button,
+.edit-mode .add-sub-step-button {
+    display: block;
+}
+
+/* Make text fields editable in edit mode */
+.edit-mode .objective_text,
+.edit-mode .step_text,
+.edit-mode .sub-step_text,
+.edit-mode .coin_number {
+    contenteditable: true;
 }

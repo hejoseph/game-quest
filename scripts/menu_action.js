@@ -99,3 +99,70 @@ deleteIcons.forEach((icon) => {
     }
   });
 });
+
+  document.addEventListener('DOMContentLoaded', () => {
+
+    function toggleEditMode(objectiveElement, enable) {
+        const actionButtons = objectiveElement.querySelectorAll('.add-step-button, .add-sub-step-button');
+        const textElements = objectiveElement.querySelectorAll('.objective_text, .step_text, .sub-step_text, .coin_number');
+        
+        if (enable) {
+            objectiveElement.classList.add('edit-mode');
+            textElements.forEach(el => el.setAttribute('contenteditable', 'true'));
+        } else {
+            objectiveElement.classList.remove('edit-mode');
+            textElements.forEach(el => el.setAttribute('contenteditable', 'false'));
+        }
+    }
+
+    // Event delegation for handling clicks on edit buttons
+    document.body.addEventListener('click', (event) => {
+        if (event.target.classList.contains('edit-button')) {
+            const objectiveElement = event.target.closest('.objective');
+            const isEditing = objectiveElement.classList.contains('edit-mode');
+            toggleEditMode(objectiveElement, !isEditing);
+        } else if (event.target.classList.contains('add-step-button')) {
+            const objectiveElement = event.target.closest('.objective');
+            addStep(objectiveElement);
+        } else if (event.target.classList.contains('add-sub-step-button')) {
+            const stepElement = event.target.closest('.step');
+            addSubStep(stepElement);
+        }
+    });
+
+    // Function to generate a new unique ID
+    function generateUniqueId(prefix) {
+        return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    }
+
+    // Function to add a new step
+    function addStep(objectiveElement) {
+        const stepsList = objectiveElement.querySelector('.steps');
+        const stepId = generateUniqueId('step');
+        const stepHTML = `
+            <li class="step" data-id="${stepId}">
+                <span class="step_text" contenteditable="true">New Step</span>
+                <span class="coin"><span class="coin_number" contenteditable="true">0</span><img class="coin_img" src="images/coin.svg"></span>
+                <ul class="sub-steps">
+                    <!-- New sub-steps will be added here -->
+                </ul>
+                <button class="add-sub-step-button">Add Sub-Step</button>
+            </li>
+        `;
+        stepsList.insertAdjacentHTML('beforeend', stepHTML);
+    }
+
+    // Function to add a new sub-step
+    function addSubStep(stepElement) {
+        const subStepsList = stepElement.querySelector('.sub-steps');
+        const subStepId = generateUniqueId('sub-step');
+        const subStepHTML = `
+            <li class="sub-step" data-id="${subStepId}">
+                <span class="sub-step_text" contenteditable="true">New Sub-Step</span>
+                <span class="coin"><span class="coin_number" contenteditable="true">0</span><img class="coin_img" src="images/coin.svg"></span>
+            </li>
+        `;
+        subStepsList.insertAdjacentHTML('beforeend', subStepHTML);
+    }
+});
+

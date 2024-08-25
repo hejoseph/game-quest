@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Quest Interface with Progress Bars</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="quest-container">
+    <h1 class="quest-title">Dragon Slayer Quest</h1>
+    <p class="quest-description">You have been chosen to slay the fearsome dragon terrorizing the village. Prepare
+      yourself for the ultimate battle!</p>
+
+    <div class="objectives">
+      <h2>Objectives:</h2>
+      <!-- Example HTML snippet for an objective with buttons to add steps and sub-steps -->
+      <div class="objective" data-id="1">
+        <p class="objective_text" contenteditable="false">Find the dragon's lair in the Dark Forest.</p>
+        <div class="menu_container">
+          <div class="menu_action">
+            <img src="images/hide.svg" alt="Hide" />
+            <img src="images/edit.svg" alt="Edit" class="edit-button"/>
+            <img src="images/delete.svg" alt="Delete" />
+            <img class="drag" src="images/drag.svg" alt="Drag" draggable="false"/>
+          </div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress" style="width: 0%;"></div>
+        </div>
+        <ul class="steps">
+          <li class="step" data-id="1-1">
+            <span class="step_text" contenteditable="false">Talk to the village elder</span>
+            <span class="coin"><span class="coin_number" contenteditable="false">15</span><img class="coin_img" src="images/coin.svg"></span>
+            <ul class="sub-steps">
+              <li class="sub-step" data-id="1-1-1">
+                <span class="sub-step_text" contenteditable="false">Ask about the dragon</span>
+                <span class="coin"><span class="coin_number" contenteditable="false">150</span><img class="coin_img" src="images/coin.svg"></span>
+              </li>
+              <li class="sub-step" data-id="1-1-2">
+                <span class="sub-step_text" contenteditable="false">Get advice on the forest</span>
+              </li>
+            </ul>
+            <button class="add-sub-step-button">Add Sub-Step</button>
+          </li>
+        </ul>
+        <button class="add-step-button">Add Step</button>
+      </div>
+      
+      <div class="objective" data-id="1">
+        <p class="objective_text" contenteditable="false">Find the dragon's lair in the Dark Forest.</p>
+        <div class="menu_container">
+          <div class="menu_action">
+            <img src="images/hide.svg" alt="Hide" />
+            <img src="images/edit.svg" alt="Edit" class="edit-button"/>
+            <img src="images/delete.svg" alt="Delete" />
+            <img class="drag" src="images/drag.svg" alt="Drag" draggable="false"/>
+          </div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress" style="width: 0%;"></div>
+        </div>
+        <ul class="steps">
+          <li class="step" data-id="1-1">
+            <span class="step_text" contenteditable="false">Talk to the village elder</span>
+            <span class="coin"><span class="coin_number" contenteditable="false">15</span><img class="coin_img" src="images/coin.svg"></span>
+            <ul class="sub-steps">
+              <li class="sub-step" data-id="1-1-1">
+                <span class="sub-step_text" contenteditable="false">Ask about the dragon</span>
+                <span class="coin"><span class="coin_number" contenteditable="false">150</span><img class="coin_img" src="images/coin.svg"></span>
+              </li>
+              <li class="sub-step" data-id="1-1-2">
+                <span class="sub-step_text" contenteditable="false">Get advice on the forest</span>
+              </li>
+            </ul>
+            <button class="add-sub-step-button">Add Sub-Step</button>
+          </li>
+        </ul>
+        <button class="add-step-button">Add Step</button>
+      </div>
+
+
+      <!-- Additional objectives here -->
+
+    </div>
+
+    <button class="add-objective-button gamify-button">Add Objective</button>
+
+  </div>
+
+  <script src="scripts/menu_action.js"></script>
+  <script src="scripts/script.js"></script>
+</body>
+
+</html>
