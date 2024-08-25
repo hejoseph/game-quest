@@ -180,9 +180,11 @@ p, li {
 }
 
 .coin_img {
-  position:absolute;
+  position: relative;
   width: 20px;
   height: 20px;
+  top: 5px;
+  left: 5px;
 }
 
 /* Gamified Button Styles */
@@ -348,4 +350,108 @@ span[contenteditable="true"]:focus {
 .edit-mode .sub-step_text,
 .edit-mode .coin_number {
     contenteditable: true;
+}
+
+
+
+/* Style for delete buttons */
+.delete-step,
+.delete-sub-step {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    margin-left: 10px;
+    display: none; /* Hide by default */
+    top: 5px;
+    position: relative;
+    left: 5px;
+    filter: invert(100%);
+}
+
+/* Show delete buttons only when in edit mode */
+.edit-mode .delete-step,
+.edit-mode .delete-sub-step {
+    display: inline; /* Show in edit mode */
+}
+
+/* Make sure the edit mode applies to the entire objective and its children */
+.edit-mode .objective_text,
+.edit-mode .step_text,
+.edit-mode .sub-step_text,
+.edit-mode .coin_number {
+    outline: 1px solid #27ae60; /* Add an outline to indicate editable state */
+    background-color: #444; /* Background color when editing */
+    color: #fff; /* Text color when editing */
+}
+
+
+
+/* Modal Background */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+
+/* Modal content */
+.modal-content {
+    display: inline-block; /* Make the width dynamic based on content */
+    background-color: #5e697e;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 80%; /* Optional: Limit the width for very long text */
+    word-wrap: break-word; /* Break long words to fit within the max-width */
+}
+
+
+
+/* Close Button */
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Button Styles */
+button {
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#confirm-button {
+  background-color: #e74c3c; /* Red for delete */
+  color: white;
+}
+
+#cancel-button {
+  background-color: #3498db; /* Blue for cancel */
+  color: white;
+}
+
+#confirm-button:hover {
+  background-color: #c0392b;
+}
+
+#cancel-button:hover {
+  background-color: #2980b9;
 }

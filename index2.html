@@ -23,7 +23,7 @@
           <div class="menu_action">
             <img src="images/hide.svg" alt="Hide" />
             <img src="images/edit.svg" alt="Edit" class="edit-button"/>
-            <img src="images/delete.svg" alt="Delete" />
+            <img src="images/delete.svg" class="delete-objective" alt="Delete_objective" />
             <img class="drag" src="images/drag.svg" alt="Drag" draggable="false"/>
           </div>
         </div>
@@ -34,20 +34,26 @@
           <li class="step" data-id="1-1">
             <span class="step_text" contenteditable="false">Talk to the village elder</span>
             <span class="coin"><span class="coin_number" contenteditable="false">15</span><img class="coin_img" src="images/coin.svg"></span>
+            <img src="images/delete.svg" alt="Delete" class="delete-step" />
             <ul class="sub-steps">
               <li class="sub-step" data-id="1-1-1">
                 <span class="sub-step_text" contenteditable="false">Ask about the dragon</span>
                 <span class="coin"><span class="coin_number" contenteditable="false">150</span><img class="coin_img" src="images/coin.svg"></span>
+                <img src="images/delete.svg" alt="Delete" class="delete-sub-step" />
               </li>
               <li class="sub-step" data-id="1-1-2">
                 <span class="sub-step_text" contenteditable="false">Get advice on the forest</span>
+                <img src="images/delete.svg" alt="Delete" class="delete-sub-step" />
               </li>
             </ul>
             <button class="add-sub-step-button">Add Sub-Step</button>
+            
           </li>
         </ul>
         <button class="add-step-button">Add Step</button>
       </div>
+      
+      
       
       <div class="objective" data-id="1">
         <p class="objective_text" contenteditable="false">Find the dragon's lair in the Dark Forest.</p>
@@ -88,9 +94,25 @@
 
     <button class="add-objective-button gamify-button">Add Objective</button>
 
+
+    <div id="confirmation-modal" class="modal">
+      <div class="modal-content">
+          <span class="close-button">&times;</span>
+          <p id="modal-message">Are you sure you want to delete this item?</p>
+          <button id="confirm-button">Yes, Delete</button>
+          <button id="cancel-button">Cancel</button>
+      </div>
+    </div>
+
   </div>
 
+
+  <!-- Confirmation Modal -->
+
+
+
   <script src="scripts/menu_action.js"></script>
+  <script src="scripts/modal.js"></script>
   <script src="scripts/script.js"></script>
 </body>
 
