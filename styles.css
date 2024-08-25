@@ -168,3 +168,13 @@ p, li {
     padding: 5px; /* Add some padding to make the editable area more noticeable */
     border-radius: 3px; /* Optional: add rounded corners */
 }
+
+.coin{
+  margin-left:10px;
+}
+
+.coin_img {
+  position:absolute;
+  width: 20px;
+  height: 20px;
+}
