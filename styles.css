@@ -15,7 +15,7 @@ body {
 }
 
 .quest-container {
-    background-color: #3b3f47;
+    background-color: #5e697e;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 400px;
@@ -46,13 +46,68 @@ body {
     margin-bottom: 10px;
 }
 
+
 .objective {
     margin-bottom: 20px;
+}
+
+
+.objective {
+    box-sizing: border-box;
+/*    display: flex;*/
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: #855c5b;
+    border-radius: 3mm;
+    margin: 10px 0;
+    cursor: grab;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 5px 10px,
+      rgba(0, 0, 0, 0.23) 0px 3px 3px;
+    transition: margin 0.25s;
+    padding:10px;
 }
 
 .objective p {
     font-size: 16px;
     color: #ffffff;
+}
+
+.objective span {
+    position: absolute;
+    top: 5px;
+    right: 3px;
+    color: rgb(180, 180, 180);
+}
+
+
+
+.objective.dragging {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0) scale(1.15);
+    pointer-events: none;
+    z-index: 1000;
+}
+.insert-animation {
+    animation: scaleit 0.1s ease-in-out;
+}
+@keyframes scaleit {
+    from {
+      transform: translate(-50%, 0) scale(1);
+    }
+}
+.objective.dragging p {
+    color: rgb(218, 83, 80);
+}
+.objective.dragging span {
+    color: rgb(214, 104, 103);
+}
+
+
+
+p, li {
+    word-wrap: break-word;
 }
 
 .progress-bar {
