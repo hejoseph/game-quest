@@ -12,6 +12,7 @@ body {
     justify-content: center;
     align-items: flex-start; /* Align items at the top */
     min-height: 100vh; /* Ensure the body covers the full viewport height */
+
 }
 
 .quest-container {
@@ -39,16 +40,23 @@ body {
 .objectives {
     text-align: left;
     margin-bottom: 20px;
+
+    position: relative;
+    /*align-items: center;
+    justify-content: center;
+    flex-direction: column;*/
 }
 
 .objectives h2 {
     color: #e74c3c;
     margin-bottom: 10px;
+
 }
 
 
 .objective {
     margin-bottom: 20px;
+
 }
 
 
@@ -85,6 +93,7 @@ body {
 .objective.dragging {
     position: absolute;
     left: 50%;
+    width: 100%;
     transform: translate(-50%, 0) scale(1.15);
     pointer-events: none;
     z-index: 1000;
