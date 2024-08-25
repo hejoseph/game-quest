@@ -96,6 +96,18 @@ body {
     pointer-events: none;
     z-index: 1000;
 }
+
+.drag {
+  pointer-events: auto; /* Allows interaction */
+  user-select: none; /* Prevents text selection */
+  cursor: grab; /* Indicates draggable area */
+}
+
+.dragging {
+  cursor: grabbing; /* Indicates active dragging */
+}
+
+
 .insert-animation {
     animation: scaleit 0.1s ease-in-out;
 }
