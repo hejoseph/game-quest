@@ -253,27 +253,34 @@ p, li {
   box-shadow: 0 2px #b38f00; /* Reduce shadow */
 }
 
-
-
-.menu_action {
-    position: absolute;
-    top: 10px; /* Adjust as needed for spacing from the top */
-    right: 10px; /* Adjust as needed for spacing from the right */
-    display: flex;
-    align-items: center;
-    gap: 8px; /* Space between icons */
-    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
-    border-radius: 4px; /* Rounded corners */
-    padding: 4px; /* Padding around the icons */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Shadow for depth */
-    z-index: 1000; /* Ensure it appears above other content */
+.menu_container {
+  position: absolute; /* Position the menu inside the objective */
+  top: 10px; /* Distance from the top edge */
+  right: 10px; /* Distance from the right edge */
 }
 
+.menu_action {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between icons */
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+  border-radius: 4px; /* Rounded corners */
+  padding: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+  opacity: 0; /* Hide menu initially */
+  transform: translateX(100%); /* Initially hide menu outside view */
+  transition: opacity 0.3s, transform 0.3s; /* Smooth transitions */
+}
+
+.objective:hover .menu_action {
+  opacity: 1; /* Show the menu on hover */
+  transform: translateX(0); /* Slide menu into view */
+}
 
 .menu_action img {
     width: 24px; /* Size of the icons */
     height: 24px; /* Size of the icons */
-    
+    cursor: pointer;
     transition: transform 0.3s, opacity 0.3s; /* Smooth transition for hover effects */
 
 }
