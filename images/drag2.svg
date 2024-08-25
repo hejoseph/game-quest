@@ -1,0 +1,15 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hamburger Bars -->
+  <rect x="16" y="18" width="32" height="6" rx="3" ry="3" fill="#4caf50" stroke="#000" stroke-width="2" />
+  <rect x="16" y="28" width="32" height="6" rx="3" ry="3" fill="#4caf50" stroke="#000" stroke-width="2" />
+  <rect x="16" y="38" width="32" height="6" rx="3" ry="3" fill="#4caf50" stroke="#000" stroke-width="2" />
+
+  <!-- Arrows Indicating Movement -->
+  <path d="M30 48 L28 50 L32 50 Z" fill="#000" />
+  <path d="M30 48 L32 46 L34 48 Z" fill="#000" />
+
+  <!-- Optional: Bouncing Effect (Gamified Element) -->
+  <circle cx="32" cy="12" r="4" fill="#ffeb3b" stroke="#000" stroke-width="2" />
+  <circle cx="32" cy="18" r="4" fill="#ffeb3b" stroke="#000" stroke-width="2" />
+  <circle cx="32" cy="24" r="4" fill="#ffeb3b" stroke="#000" stroke-width="2" />
+</svg>

@@ -79,7 +79,7 @@ body {
     color: #ffffff;
 }
 
-.material-icons-round {
+.menu_action {
     position: absolute;
     top: 5px;
     right: 3px;
@@ -239,4 +239,38 @@ p, li {
 .gamify-button:active {
   transform: translateY(2px); /* Press down effect */
   box-shadow: 0 2px #b38f00; /* Reduce shadow */
+}
+
+
+
+.menu_action {
+    position: absolute;
+    top: 10px; /* Adjust as needed for spacing from the top */
+    right: 10px; /* Adjust as needed for spacing from the right */
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between icons */
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    border-radius: 4px; /* Rounded corners */
+    padding: 4px; /* Padding around the icons */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+    z-index: 1000; /* Ensure it appears above other content */
+}
+
+
+.menu_action img {
+    width: 24px; /* Size of the icons */
+    height: 24px; /* Size of the icons */
+    
+    transition: transform 0.3s, opacity 0.3s; /* Smooth transition for hover effects */
+
+}
+
+.menu_action img:hover {
+    transform: scale(1.1); /* Slightly enlarge icon on hover */
+    opacity: 0.8; /* Slightly fade icon on hover */
+}
+
+.menu_action img:active {
+    transform: scale(0.9); /* Slightly shrink icon when clicked */
 }
