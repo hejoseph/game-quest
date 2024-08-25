@@ -1,168 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Quest Interface with Progress Bars</title>
-    <link rel="stylesheet" href="styles.css">
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone"
-      rel="stylesheet"
-    />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Quest Interface with Progress Bars</title>
+  <link rel="stylesheet" href="styles.css">
+  <link
+    href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone"
+    rel="stylesheet" />
 </head>
+
 <body>
-    <div class="quest-container">
-        <h1 class="quest-title">Dragon Slayer Quest</h1>
-        <p class="quest-description">You have been chosen to slay the fearsome dragon terrorizing the village. Prepare yourself for the ultimate battle!</p>
-        
-        <div class="objectives">
-            <h2>Objectives:</h2>
-            <div class="objective">
-                <p class="objective_text">Find the dragon's lair in the Dark Forest.</p>
-                <span class="material-icons-round">drag_indicator</span>
-                <div class="progress-bar">
-                    <div class="progress" style="width: 0%;"></div>
-                </div>
-                <ul>
-                    <li class="step">
-                        Talk to the village elder
-                        <ul class="sub-steps">
-                            <li class="sub-step">Ask about the dragon</li>
-                            <li class="sub-step">Get advice on the forest</li>
-                        </ul>
-                    </li>
-                    <li class="step">Get the map from the merchant
-                        <ul class="sub-steps">
-                            <li class="sub-step">Find the merchant</li>
-                            <li class="sub-step">Negotiate the price</li>
-                        </ul>
-                    </li>
-                    <li class="step">Enter the Dark Forest</li>
-                </ul>
-            </div>
+  <div class="quest-container">
+    <h1 class="quest-title">Dragon Slayer Quest</h1>
+    <p class="quest-description">You have been chosen to slay the fearsome dragon terrorizing the village. Prepare
+      yourself for the ultimate battle!</p>
 
-            <div class="objective">
-                <p class="objective_text">Collect a magic sword from the ancient ruins.</p>
-                <span class="material-icons-round">drag_indicator</span>
-                <div class="progress-bar">
-                    <div class="progress" style="width: 0%;"></div>
-                </div>
-                <ul>
-                    <li class="step">Find the hidden entrance
-                        <ul class="sub-steps">
-                            <li class="sub-step">Locate the secret path</li>
-                            <li class="sub-step">Unlock the entrance</li>
-                        </ul>
-                    </li>
-                    <li class="step">Solve the ancient riddle</li>
-                    <li class="step">Retrieve the sword</li>
-                </ul>
-            </div>
-
-            <div class="objective">
-                <p class="objective_text">Slay the dragon.</p>
-                <span class="material-icons-round">drag_indicator</span>
-                <div class="progress-bar">
-                    <div class="progress" style="width: 0%;"></div>
-                </div>
-                <ul>
-                    <li class="step">Confront the dragon</li>
-                    <li class="step">Use the magic sword</li>
-                    <li class="step">Defeat the dragon</li>
-                </ul>
-            </div>
-
-            <div class="objective">
-                <p class="objective_text">Return to the village with proof of the dragon's demise.</p>
-                <span class="material-icons-round">drag_indicator</span>
-                <div class="progress-bar">
-                    <div class="progress" style="width: 0%;"></div>
-                </div>
-                <ul>
-                    <li class="step">Collect a dragon scale</li>
-                    <li class="step">Travel back to the village</li>
-                    <li class="step">Present the proof to the elder</li>
-                </ul>
-            </div>
+    <div class="objectives">
+      <h2>Objectives:</h2>
+      <div class="objective">
+        <p class="objective_text">Find the dragon's lair in the Dark Forest.</p>
+        <span class="material-icons-round">drag_indicator</span>
+        <div class="progress-bar">
+          <div class="progress" style="width: 0%;"></div>
         </div>
+        <ul>
+          <li class="step">
+            <span class="step_text">Talk to the village elder</span>
+            <ul class="sub-steps">
+              <li class="sub-step"><span class="sub-step_text">Ask about the dragon</span></li>
+              <li class="sub-step"><span class="sub-step_text">Get advice on the forest</span></li>
+            </ul>
+          </li>
+          <li class="step">
+            <span class="step_text">Get the map from the merchant</span>
+            <ul class="sub-steps">
+              <li class="sub-step"><span class="sub-step_text">Find the merchant</span></li>
+              <li class="sub-step"><span class="sub-step_text">Negotiate the price</span></li>
+            </ul>
+          </li>
+          <li class="step"><span class="step_text">Enter the Dark Forest</span></li>
+        </ul>
+      </div>
 
-        <button class="add-quest-button">Add Quest</button>
+      <div class="objective">
+        <p class="objective_text">Collect a magic sword from the ancient ruins.</p>
+        <span class="material-icons-round">drag_indicator</span>
+        <div class="progress-bar">
+          <div class="progress" style="width: 0%;"></div>
+        </div>
+        <ul>
+          <li class="step">
+            <span class="step_text">Find the hidden entrance</span>
+            <ul class="sub-steps">
+              <li class="sub-step"><span class="sub-step_text">Locate the secret path</span></li>
+              <li class="sub-step"><span class="sub-step_text">Unlock the entrance</span></li>
+            </ul>
+          </li>
+          <li class="step"><span class="step_text">Solve the ancient riddle</span></li>
+          <li class="step"><span class="step_text">Retrieve the sword</span></li>
+        </ul>
+      </div>
+
+      <div class="objective">
+        <p class="objective_text">Slay the dragon.</p>
+        <span class="material-icons-round">drag_indicator</span>
+        <div class="progress-bar">
+          <div class="progress" style="width: 0%;"></div>
+        </div>
+        <ul>
+          <li class="step"><span class="step_text">Confront the dragon</span></li>
+          <li class="step"><span class="step_text">Use the magic sword</span></li>
+          <li class="step"><span class="step_text">Defeat the dragon</span></li>
+        </ul>
+      </div>
+
+      <div class="objective">
+        <p class="objective_text">Return to the village with proof of the dragon's demise.</p>
+        <span class="material-icons-round">drag_indicator</span>
+        <div class="progress-bar">
+          <div class="progress" style="width: 0%;"></div>
+        </div>
+        <ul>
+          <li class="step"><span class="step_text">Collect a dragon scale</span></li>
+          <li class="step"><span class="step_text">Travel back to the village</span></li>
+          <li class="step"><span class="step_text">Present the proof to the elder</span></li>
+        </ul>
+      </div>
     </div>
-    <script>
-      let isDragging = false;
-      let currentItem = null;
-      let containerOffsetY = 0;
-      let initY = 0;
 
-      const container = document.querySelector(".objectives");
-      container.style.width = container.offsetWidth + "px";
-      container.style.height = container.offsetHeight + "px";
+    <button class="add-quest-button">Add Quest</button>
+  </div>
 
-      document.addEventListener("mousedown", (e) => {
-        
-        if (e.target.matches("span.material-icons-round")) {
-            const item = e.target.closest(".objective");
-            isDragging = true;
-            currentItem = item;
-            containerOffsetY = currentItem.offsetTop;
-            currentItem.classList.add("dragging");
-            document.body.style.userSelect = "none";
-            currentItem.classList.add("insert-animation");
-            currentItem.style.top = containerOffsetY + "px";
-            initY = e.clientY;
+  <script>
+    let isDragging = false;
+    let currentItem = null;
+    let containerOffsetY = 0;
+    let initY = 0;
+
+    const container = document.querySelector(".objectives");
+    container.style.width = container.offsetWidth + "px";
+    container.style.height = container.offsetHeight + "px";
+
+    document.addEventListener("mousedown", (e) => {
+      if (e.target.matches("span.material-icons-round")) {
+        const item = e.target.closest(".objective");
+        isDragging = true;
+        currentItem = item;
+        containerOffsetY = currentItem.offsetTop;
+        currentItem.classList.add("dragging");
+        document.body.style.userSelect = "none";
+        currentItem.classList.add("insert-animation");
+        currentItem.style.top = containerOffsetY + "px";
+        initY = e.clientY;
+      }
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (isDragging && currentItem) {
+        currentItem.classList.remove("insert-animation");
+        let newTop = containerOffsetY - (initY - e.clientY);
+        if (newTop < -50) {
+          newTop = -50;
+        } else if (newTop > container.offsetHeight - 30) {
+          newTop = container.offsetHeight - 30;
         }
-      });
-      document.addEventListener("mousemove", (e) => {
-        if (isDragging && currentItem) {
-          currentItem.classList.remove("insert-animation");
-          let newTop = containerOffsetY - (initY - e.clientY);
-          if (newTop < -50) {
-            newTop = -50;
-          } else if (newTop > container.offsetHeight - 30) {
-            newTop = container.offsetHeight - 30;
-          }
-          currentItem.style.top = newTop + "px";
-
-          let itemSibilings = [
-            ...document.querySelectorAll(".objective:not(.dragging)"),
-          ];
-          let nextItem = itemSibilings.find((sibiling) => {
-            return (
-              e.clientY - container.getBoundingClientRect().top <=
-              sibiling.offsetTop + sibiling.offsetHeight / 2
-            );
-          });
-
-          itemSibilings.forEach((sibiling) => {
-            sibiling.style.marginTop = "10px";
-          });
-
-          if (nextItem) {
-            nextItem.style.marginTop = currentItem.offsetHeight + 20 + "px";
-          }
-          container.insertBefore(currentItem, nextItem);
-        }
-      });
-
-      document.addEventListener("mouseup", () => {
-        if (currentItem) {
-          currentItem.classList.remove("dragging");
-          currentItem.style.top = "auto";
-          currentItem = null;
-          isDragging = false;
-
-          document.body.style.userSelect = "auto";
-        }
+        currentItem.style.top = newTop + "px";
 
         let itemSibilings = [
           ...document.querySelectorAll(".objective:not(.dragging)"),
         ];
+        let nextItem = itemSibilings.find((sibiling) => {
+          return (
+            e.clientY - container.getBoundingClientRect().top <=
+            sibiling.offsetTop + sibiling.offsetHeight / 2
+          );
+        });
 
         itemSibilings.forEach((sibiling) => {
           sibiling.style.marginTop = "10px";
         });
+
+        if (nextItem) {
+          nextItem.style.marginTop = currentItem.offsetHeight + 20 + "px";
+        }
+        container.insertBefore(currentItem, nextItem);
+      }
+    });
+
+    document.addEventListener("mouseup", () => {
+      if (currentItem) {
+        currentItem.classList.remove("dragging");
+        currentItem.style.top = "auto";
+        currentItem = null;
+        isDragging = false;
+
+        document.body.style.userSelect = "auto";
+      }
+
+      let itemSibilings = [
+        ...document.querySelectorAll(".objective:not(.dragging)"),
+      ];
+
+      itemSibilings.forEach((sibiling) => {
+        sibiling.style.marginTop = "10px";
       });
-    </script>
-    <script src="script.js"></script>
+    });
+  </script>
+  <script src="script.js"></script>
 </body>
+
 </html>
