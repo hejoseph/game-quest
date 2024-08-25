@@ -1,5 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+  // Select all delete images
+// const deleteIcons = document.querySelectorAll('img[alt="Delete"]');
+
+// // Loop through each delete image and add a click event listener
+// deleteIcons.forEach((icon) => {
+//     icon.addEventListener('click', (event) => {
+//         // Find the closest parent .objective div
+//         const objectiveDiv = icon.closest('.objective');
+//         if (objectiveDiv) {
+//             // Remove the .objective div from the DOM
+//             objectiveDiv.remove();
+//         }
+//     });
+// });
+
+
 
   // Add Objective
   const addObjectiveButton = document.querySelector('.add-objective-button');
