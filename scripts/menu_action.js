@@ -85,7 +85,109 @@ document.querySelectorAll(".drag").forEach((element) => {
   });
 });
 
+function saveData() {
+  const objectives = [];
+  document.querySelectorAll('.objective').forEach(objective => {
+    const objId = objective.dataset.id;
+    const objText = objective.querySelector('.objective_text').innerText;
+    
+    const steps = [];
+    objective.querySelectorAll('.step').forEach(step => {
+      const stepId = step.dataset.id;
+      const stepText = step.querySelector('.step_text').innerText;
+      const coins = step.querySelector('.coin_number').innerText;
+
+      const subSteps = [];
+      step.querySelectorAll('.sub-step').forEach(subStep => {
+        const subStepId = subStep.dataset.id;
+        const subStepText = subStep.querySelector('.sub-step_text').innerText;
+        const subStepCoins = subStep.querySelector('.coin_number')?.innerText || "0";
+        
+        subSteps.push({ id: subStepId, text: subStepText, coins: subStepCoins });
+      });
+
+      steps.push({ id: stepId, text: stepText, coins: coins, subSteps: subSteps });
+    });
+
+    objectives.push({ id: objId, text: objText, steps: steps });
+  });
+
+  localStorage.setItem('appData', JSON.stringify({ 
+    questTitle: document.querySelector('.quest-title').innerText,
+    questDescription: document.querySelector('.quest-description').innerText,
+    totalCoin: document.querySelector('#total_coin').innerText,
+    objectives: objectives
+  }));
+}
+
+function loadData() {
+  const savedData = localStorage.getItem('appData');
+  if (!savedData) return;
+
+  const data = JSON.parse(savedData);
+
+  document.querySelector('.quest-title').innerText = data.questTitle;
+  document.querySelector('.quest-description').innerText = data.questDescription;
+  document.querySelector('#total_coin').innerText = data.totalCoin;
+
+  const objectivesContainer = document.querySelector('.objectives');
+  data.objectives.forEach(objData => {
+    const objectiveElement = document.createElement('div');
+    objectiveElement.classList.add('objective');
+    objectiveElement.dataset.id = objData.id;
+    
+    objectiveElement.innerHTML = `
+      <p class="objective_text" contenteditable="false">${objData.text}</p>
+      <div class="menu_container">
+        <div class="menu_action">
+          <img src="images/hide.svg" alt="Hide" class="toggle-visibility"/>
+          <img src="images/edit.svg" alt="Edit" class="edit-button"/>
+          <img src="images/delete.svg" class="delete-objective" alt="Delete_objective" />
+          <img class="drag" src="images/drag.svg" alt="Drag" draggable="false"/>
+        </div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress" style="width: 0%;"></div>
+      </div>
+      <ul class="steps">
+      </ul>
+      <button class="add-step-button">Add Step</button>
+    `;
+    
+    objData.steps.forEach(stepData => {
+      const stepHTML = `
+        <li class="step" data-id="${stepData.id}">
+          <span class="step_text" contenteditable="false">${stepData.text}</span>
+          <span class="coin"><span class="coin_number" contenteditable="false">${stepData.coins}</span><img class="coin_img" src="images/coin.svg"></span>
+          <img src="images/delete.svg" alt="Delete" class="delete-step" />
+          <ul class="sub-steps">
+          </ul>
+          <button class="add-sub-step-button">Add Sub-Step</button>
+        </li>
+      `;
+      objectiveElement.querySelector('.steps').insertAdjacentHTML('beforeend', stepHTML);
+
+      stepData.subSteps.forEach(subStepData => {
+        const subStepHTML = `
+          <li class="sub-step" data-id="${subStepData.id}">
+            <span class="sub-step_text" contenteditable="false">${subStepData.text}</span>
+            <span class="coin"><span class="coin_number" contenteditable="false">${subStepData.coins}</span><img class="coin_img" src="images/coin.svg"></span>
+            <img src="images/delete.svg" alt="Delete" class="delete-sub-step" />
+          </li>
+        `;
+        objectiveElement.querySelector('.sub-steps').insertAdjacentHTML('beforeend', subStepHTML);
+      });
+    });
+
+    objectivesContainer.appendChild(objectiveElement);
+  });
+}
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
+  loadData();
+
   function toggleEditLockIcon(element){
     console.log(element.src);
     // Check if currently in edit mode by checking the current icon src or a data attribute
@@ -118,6 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
       textElements.forEach((el) => el.setAttribute("contenteditable", "true"));
     } else {
       objectiveElement.classList.remove("edit-mode");
+      saveData();
       textElements.forEach((el) => el.setAttribute("contenteditable", "false"));
     }
 
@@ -271,4 +374,126 @@ document.addEventListener("DOMContentLoaded", () => {
       window.refreshDeleteObjectiveHook();
     }
   }
+});
+
+
+
+document.getElementById('export-button').addEventListener('click', () => {
+  const data = {
+    questTitle: document.querySelector('.quest-title').innerText,
+    questDescription: document.querySelector('.quest-description').innerText,
+    totalCoin: document.querySelector('#total_coin').innerText,
+    objectives: []
+  };
+
+  document.querySelectorAll('.objective').forEach(objective => {
+    const objId = objective.dataset.id;
+    const objText = objective.querySelector('.objective_text').innerText;
+    
+    const steps = [];
+    objective.querySelectorAll('.step').forEach(step => {
+      const stepId = step.dataset.id;
+      const stepText = step.querySelector('.step_text').innerText;
+      const coins = step.querySelector('.coin_number').innerText;
+
+      const subSteps = [];
+      step.querySelectorAll('.sub-step').forEach(subStep => {
+        const subStepId = subStep.dataset.id;
+        const subStepText = subStep.querySelector('.sub-step_text').innerText;
+        const subStepCoins = subStep.querySelector('.coin_number')?.innerText || "0";
+        
+        subSteps.push({ id: subStepId, text: subStepText, coins: subStepCoins });
+      });
+
+      steps.push({ id: stepId, text: stepText, coins: coins, subSteps: subSteps });
+    });
+
+    data.objectives.push({ id: objId, text: objText, steps: steps });
+  });
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'appData.json';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('import-button').addEventListener('click', () => {
+  document.getElementById('import-file').click();
+});
+
+document.getElementById('import-file').addEventListener('change', (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+
+      document.querySelector('.quest-title').innerText = data.questTitle;
+      document.querySelector('.quest-description').innerText = data.questDescription;
+      document.querySelector('#total_coin').innerText = data.totalCoin;
+
+      const objectivesContainer = document.querySelector('.objectives');
+      objectivesContainer.innerHTML = ''; // Clear existing objectives
+
+      data.objectives.forEach(objData => {
+        const objectiveElement = document.createElement('div');
+        objectiveElement.classList.add('objective');
+        objectiveElement.dataset.id = objData.id;
+        
+        objectiveElement.innerHTML = `
+          <p class="objective_text" contenteditable="true">${objData.text}</p>
+          <div class="menu_container">
+            <div class="menu_action">
+              <img src="images/hide.svg" alt="Hide" class="toggle-visibility"/>
+              <img src="images/edit.svg" alt="Edit" class="edit-button"/>
+              <img src="images/delete.svg" class="delete-objective" alt="Delete_objective" />
+              <img class="drag" src="images/drag.svg" alt="Drag" draggable="false"/>
+            </div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress" style="width: 0%;"></div>
+          </div>
+          <ul class="steps">
+          </ul>
+          <button class="add-step-button">Add Step</button>
+        `;
+
+        objData.steps.forEach(stepData => {
+          const stepHTML = `
+            <li class="step" data-id="${stepData.id}">
+              <span class="step_text" contenteditable="false">${stepData.text}</span>
+              <span class="coin"><span class="coin_number" contenteditable="false">${stepData.coins}</span><img class="coin_img" src="images/coin.svg"></span>
+              <img src="images/delete.svg" alt="Delete" class="delete-step" />
+              <ul class="sub-steps">
+              </ul>
+              <button class="add-sub-step-button">Add Sub-Step</button>
+            </li>
+          `;
+          objectiveElement.querySelector('.steps').insertAdjacentHTML('beforeend', stepHTML);
+
+          stepData.subSteps.forEach(subStepData => {
+            const subStepHTML = `
+              <li class="sub-step" data-id="${subStepData.id}">
+                <span class="sub-step_text" contenteditable="false">${subStepData.text}</span>
+                <span class="coin"><span class="coin_number" contenteditable="true">${subStepData.coins}</span><img class="coin_img" src="images/coin.svg"></span>
+                <img src="images/delete.svg" alt="Delete" class="delete-sub-step" />
+              </li>
+            `;
+            objectiveElement.querySelector('.sub-steps').insertAdjacentHTML('beforeend', subStepHTML);
+          });
+        });
+
+        objectivesContainer.appendChild(objectiveElement);
+      });
+
+    } catch (error) {
+      alert('Failed to load data: ' + error.message);
+    }
+  };
+  reader.readAsText(file);
 });
