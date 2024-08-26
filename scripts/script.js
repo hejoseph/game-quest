@@ -180,11 +180,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const objective = event.target.closest(".objective");
     if (!objective) return; // Ignore clicks outside objectives
 
-    if (event.target.classList.contains("sub-step_text")) {
+    if (event.target.classList.contains("sub-step_text") && event.target.getAttribute("contenteditable") === "false") {
       onSubStepClicked(event.target, objective);
     }
 
-    if (event.target.classList.contains("step_text")) {
+    if (event.target.classList.contains("step_text") && event.target.getAttribute("contenteditable") === "false") {
       onStepClicked(event.target, objective);
     }
   }
