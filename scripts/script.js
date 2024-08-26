@@ -1,89 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-
-  // Select all delete images
-// const deleteIcons = document.querySelectorAll('img[alt="Delete"]');
-
-// // Loop through each delete image and add a click event listener
-// deleteIcons.forEach((icon) => {
-//     icon.addEventListener('click', (event) => {
-//         // Find the closest parent .objective div
-//         const objectiveDiv = icon.closest('.objective');
-//         if (objectiveDiv) {
-//             // Remove the .objective div from the DOM
-//             objectiveDiv.remove();
-//         }
-//     });
-// });
-
-
-
-  // Add Objective
-  // const addObjectiveButton = document.querySelector('.add-objective-button');
-  // addObjectiveButton.addEventListener('click', addObjective);
-
-  // function addObjective() {
-  //     const objectivesContainer = document.querySelector('.objectives');
-  //     const newObjective = document.createElement('div');
-  //     newObjective.classList.add('objective');
-
-  //     newObjective.innerHTML = `
-  //         <p class="objective_text" contenteditable="true">New Objective</p>
-  //         <span class="material-icons-round">drag_indicator</span>
-  //         <div class="progress-bar">
-  //             <div class="progress" style="width: 0%;"></div>
-  //         </div>
-  //         <ul>
-  //             <!-- Steps will be added here -->
-  //         </ul>
-  //         <button class="add-step-button gamify-button">Add Step</button>
-  //     `;
-
-  //     objectivesContainer.appendChild(newObjective);
-
-  //     // Attach event listener to the new "Add Step" button
-  //     newObjective.querySelector('.add-step-button').addEventListener('click', () => addStep(newObjective));
-  // }
-
-  // function addStep(objective) {
-  //     const stepsList = objective.querySelector('ul');
-  //     const newStep = document.createElement('li');
-  //     newStep.classList.add('step');
-
-  //     newStep.innerHTML = `
-  //         <span class="step_text" contenteditable="true">New Step</span>
-  //         <span class="coin-input">
-  //             <input type="number" min="0" placeholder="Coins" class="coin-number">
-  //             <img class="coin_img" src="images/coin.svg" alt="coin">
-  //         </span>
-  //         <button class="add-substep-button gamify-button">Add Sub-step</button>
-  //         <ul class="sub-steps"></ul>
-  //     `;
-
-  //     stepsList.appendChild(newStep);
-
-  //     // Attach event listener to the new "Add Sub-step" button
-  //     newStep.querySelector('.add-substep-button').addEventListener('click', () => addSubStep(newStep));
-  // }
-
-  // function addSubStep(step) {
-  //     const subStepsList = step.querySelector('.sub-steps');
-  //     const newSubStep = document.createElement('li');
-  //     newSubStep.classList.add('sub-step');
-
-  //     newSubStep.innerHTML = `
-  //         <span class="sub-step_text" contenteditable="true">New Sub-step</span>
-  //         <span class="coin-input">
-  //             <input type="number" min="0" placeholder="Coins" class="coin-number">
-  //             <img class="coin_img" src="images/coin.svg" alt="coin">
-  //         </span>
-  //     `;
-
-  //     subStepsList.appendChild(newSubStep);
-  // }
-
-
-
-
   function updateObjectiveProgress(objective) {
     const steps = objective.querySelectorAll(".step");
     let totalNodes = 0;
@@ -115,25 +30,32 @@ document.addEventListener("DOMContentLoaded", () => {
     objectiveProgress.style.width = progressPercentage + "%";
   }
 
+
+  // Mark the step as done or undone if all sub-steps are completed or not
   function updateStepProgress(step) {
     const subSteps = step.querySelectorAll(".sub-step_text");
+    const step_coin_number = getCoinFromCurrentStepOrSubStep(step);
     const step_text = step.querySelector(".step_text");
     const completedSubSteps = Array.from(subSteps).filter(
       (subStep) => subStep.style.textDecoration === "line-through"
     ).length;
     const allSubStepsCompleted = subSteps.length === completedSubSteps;
 
-    // Mark the step as done if all sub-steps are completed
     if (allSubStepsCompleted) {
       step_text.style.textDecoration = "line-through";
       step_text.style.color = "#aaa";
+      addToWallet(step_coin_number);
     } else {
-      step_text.style.textDecoration = "";
-      step_text.style.color = "#ccc";
+      if(step_text.style.textDecoration=="line-through"){
+        addToWallet("-"+step_coin_number);
+        step_text.style.textDecoration = "";
+        step_text.style.color = "#ccc";
+      }
     }
   }
 
   function handleDoubleClick(event) {
+    return;
     const target = event.target;
 
     if (
@@ -170,55 +92,100 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function getWalletCoin() {
+    const totalCoinElement = document.querySelector("#total_coin");
+    const currentValue = totalCoinElement.textContent;
+    return currentValue;
+  }
+
+  function setWalletCoin(coin_number) {
+    const totalCoinElement = document.querySelector('#total_coin');
+    totalCoinElement.textContent = coin_number;
+  }
+
+  function addToWallet(number){
+    if(number=="0") return;
+    const totalCoinElement = document.querySelector("#total_coin");
+    const currentValue = totalCoinElement.textContent;
+    let sum = Number(currentValue) + Number(number);
+    totalCoinElement.textContent = sum;
+  }
+
+  function getCoinFromCurrentStepOrSubStep(stepOrSubStep){
+    return stepOrSubStep.querySelector(".coin_number")
+    ? stepOrSubStep.querySelector(".coin_number").textContent
+    : "0";
+  }
+
+  function onSubStepClicked(subStep_text, objective) {
+    const step = subStep_text.closest(".step");
+    const subStep = subStep_text.closest(".sub-step");
+    const sub_step_coin_number = getCoinFromCurrentStepOrSubStep(subStep);
+    const step_coin_number = getCoinFromCurrentStepOrSubStep(step);
+    const subSteps = step.querySelectorAll(".sub-step");
+
+    // Toggle the sub-step
+    if (subStep_text.style.textDecoration === "line-through") {
+      subStep_text.style.textDecoration = "";
+      subStep_text.style.color = "#ccc";
+      addToWallet("-"+sub_step_coin_number);
+    } else {
+      subStep_text.style.textDecoration = "line-through";
+      subStep_text.style.color = "#aaa";
+      addToWallet(sub_step_coin_number);
+    }
+
+    // Update step and objective progress
+    updateStepProgress(step);
+    updateObjectiveProgress(objective);
+  }
+
+  function onStepClicked(step_text, objective) {
+    const step = step_text.closest(".step");
+    const subSteps_text = step.querySelectorAll(".sub-step_text");
+    const step_coin_number = getCoinFromCurrentStepOrSubStep(step);
+
+    // Toggle the step
+    if (step_text.style.textDecoration === "line-through") {
+      step_text.style.textDecoration = "";
+      step_text.style.color = "#ccc";
+      addToWallet("-"+step_coin_number);
+      subSteps_text.forEach((subStep_text) => {
+        const subStep = subStep_text.closest(".sub-step");
+        const sub_step_coin_number = getCoinFromCurrentStepOrSubStep(subStep);
+        // subStep_text = subStep.querySelector(".sub-step_text");
+        subStep_text.style.textDecoration = "";
+        subStep_text.style.color = "#ccc";
+        addToWallet("-"+sub_step_coin_number);
+      });
+    } else {
+      step_text.style.textDecoration = "line-through";
+      step_text.style.color = "#aaa";
+      addToWallet(step_coin_number);
+      subSteps_text.forEach((subStep_text) => {
+        const subStep = subStep_text.closest(".sub-step");
+        const sub_step_coin_number = getCoinFromCurrentStepOrSubStep(subStep);
+        // subStep_text = subStep.querySelector(".sub-step_text");
+        subStep_text.style.textDecoration = "line-through";
+        subStep_text.style.color = "#aaa";
+        addToWallet(sub_step_coin_number);
+      });
+    }
+
+    // Update objective progress
+    updateObjectiveProgress(objective);
+  }
+
   function handleClick(event) {
     const objective = event.target.closest(".objective");
     if (!objective) return; // Ignore clicks outside objectives
 
     if (event.target.classList.contains("sub-step_text")) {
-      const subStep_text = event.target;
-      const step = event.target.closest(".step");
-      const subSteps = step.querySelectorAll(".sub-step");
-
-      // Toggle the sub-step
-      if (subStep_text.style.textDecoration === "line-through") {
-        subStep_text.style.textDecoration = "";
-        subStep_text.style.color = "#ccc";
-      } else {
-        subStep_text.style.textDecoration = "line-through";
-        subStep_text.style.color = "#aaa";
-      }
-
-      // Update step and objective progress
-      updateStepProgress(step);
-      updateObjectiveProgress(objective);
+      onSubStepClicked(event.target, objective);
     }
 
     if (event.target.classList.contains("step_text")) {
-      const step_text = event.target;
-      const step = event.target.closest(".step");
-      const subSteps_text = step.querySelectorAll(".sub-step_text");
-
-      // Toggle the step
-      if (step_text.style.textDecoration === "line-through") {
-        step_text.style.textDecoration = "";
-        step_text.style.color = "#ccc";
-        subSteps_text.forEach((subStep) => {
-          // subStep_text = subStep.querySelector(".sub-step_text");
-          subStep.style.textDecoration = "";
-          subStep.style.color = "#ccc";
-        });
-      } else {
-        step_text.style.textDecoration = "line-through";
-        step_text.style.color = "#aaa";
-        subSteps_text.forEach((subStep) => {
-          // subStep_text = subStep.querySelector(".sub-step_text");
-          subStep.style.textDecoration = "line-through";
-          subStep.style.color = "#aaa";
-        });
-      }
-
-      // Update objective progress
-      updateObjectiveProgress(objective);
+      onStepClicked(event.target, objective);
     }
   }
 
