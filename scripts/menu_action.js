@@ -120,6 +120,56 @@ function saveData() {
   }));
 }
 
+function loadProgressBars(){
+    // Get all elements with the class "objective"
+  const objectives = document.querySelectorAll('.objective');
+
+  // Loop through each "objective" element
+  objectives.forEach((objective) => {
+    // updateObjectiveProgress(objective);
+  });
+}
+
+function loadState() {
+  const data = JSON.parse(localStorage.getItem('appData'));
+
+  if (data) {
+    data.objectives.forEach(objData => {
+      objData.steps.forEach(stepData => {
+        const stepElement = document.querySelector(`.step[data-id="${stepData.id}"] .step_text`);
+        if (stepElement) {
+          stepElement.style.textDecoration = stepData.done ? 'line-through' : 'none';
+        }
+        stepData.subSteps.forEach(subStepData => {
+          const subStepElement = document.querySelector(`.sub-step[data-id="${subStepData.id}"] .sub-step_text`);
+          if (subStepElement) {
+            subStepElement.style.textDecoration = subStepData.done ? 'line-through' : 'none';
+          }
+        });
+      });
+    });
+  }
+}
+
+function updateItemState(itemId, isDone) {
+  let data = JSON.parse(localStorage.getItem('appData')) || { objectives: [] };
+
+  data.objectives.forEach(objective => {
+    objective.steps.forEach(step => {
+      if (step.id === itemId) {
+        step.done = isDone;
+      }
+      step.subSteps.forEach(subStep => {
+        if (subStep.id === itemId) {
+          subStep.done = isDone;
+        }
+      });
+    });
+  });
+
+  localStorage.setItem('appData', JSON.stringify(data));
+}
+
 function loadData() {
   const savedData = localStorage.getItem('appData');
   if (!savedData) return;
@@ -187,6 +237,8 @@ function loadData() {
 
 document.addEventListener("DOMContentLoaded", () => {
   loadData();
+  loadState();
+  loadProgressBars();
 
   function toggleEditLockIcon(element){
     console.log(element.src);
@@ -258,6 +310,20 @@ document.addEventListener("DOMContentLoaded", () => {
     return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   }
 
+  function saveNewItem(itemId) {
+    let data = JSON.parse(localStorage.getItem('appData')) || { objectives: [] };
+  
+    data.objectives.forEach(objective => {
+      objective.steps.forEach(step => {
+        if (step.subSteps) {
+          step.subSteps.push({ id: itemId, done: false });
+        }
+      });
+    });
+  
+    localStorage.setItem('appData', JSON.stringify(data));
+  }
+
   // Function to add a new step
   function addStep(objectiveElement) {
     const stepsList = objectiveElement.querySelector(".steps");
@@ -275,6 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </li>
       `;
     stepsList.insertAdjacentHTML("beforeend", stepHTML);
+    saveNewItem(stepId);
   }
 
   // Function to add a new sub-step
@@ -289,6 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </li>
       `;
     subStepsList.insertAdjacentHTML("beforeend", subStepHTML);
+    saveNewItem(subStepId);
   }
 
   function refreshHookMiniMaximize() {
@@ -328,6 +396,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function addObjective() {
     const objectivesContainer = document.querySelector(".objectives");
     const newObjective = document.createElement("div");
+    const stepId = generateUniqueId("step");
+    const subStepId = generateUniqueId("sub-step");
     newObjective.classList.add("objective");
 
     newObjective.innerHTML = `
@@ -344,12 +414,12 @@ document.addEventListener("DOMContentLoaded", () => {
               <div class="progress" style="width: 0%;"></div>
           </div>
           <ul class="steps">
-            <li class="step" data-id="1-1">
+            <li class="step" data-id="${stepId}">
               <span class="step_text" contenteditable="false">New Step</span>
               <span class="coin"><span class="coin_number" contenteditable="false">0</span><img class="coin_img" src="images/coin.svg"></span>
               <img src="images/delete.svg" alt="Delete" class="delete-step" />
               <ul class="sub-steps">
-                <li class="sub-step" data-id="1-1-1">
+                <li class="sub-step" data-id="${subStepId}">
                   <span class="sub-step_text" contenteditable="false">New Sub Step</span>
                   <span class="coin"><span class="coin_number" contenteditable="false">0</span><img class="coin_img" src="images/coin.svg"></span>
                   <img src="images/delete.svg" alt="Delete" class="delete-sub-step" />
@@ -361,7 +431,8 @@ document.addEventListener("DOMContentLoaded", () => {
           </ul>
           <button class="add-step-button">Add Step</button>
       `;
-
+    saveNewItem(stepId);
+    saveNewItem(subStepId);
     objectivesContainer.appendChild(newObjective);
 
     // Attach event listener to the new "Add Step" button
@@ -497,3 +568,4 @@ document.getElementById('import-file').addEventListener('change', (event) => {
   };
   reader.readAsText(file);
 });
+

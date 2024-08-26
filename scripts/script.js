@@ -36,6 +36,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const subSteps = step.querySelectorAll(".sub-step_text");
     const step_coin_number = getCoinFromCurrentStepOrSubStep(step);
     const step_text = step.querySelector(".step_text");
+    const itemId = step.dataset.id;
+    let isDone = false;
+
     const completedSubSteps = Array.from(subSteps).filter(
       (subStep) => subStep.style.textDecoration === "line-through"
     ).length;
@@ -44,14 +47,18 @@ document.addEventListener("DOMContentLoaded", () => {
     if (allSubStepsCompleted) {
       step_text.style.textDecoration = "line-through";
       step_text.style.color = "#aaa";
+      isDone = true;
       addToWallet(step_coin_number);
     } else {
+      isDone = false;
       if(step_text.style.textDecoration=="line-through"){
         addToWallet("-"+step_coin_number);
         step_text.style.textDecoration = "";
         step_text.style.color = "#ccc";
       }
     }
+
+    updateItemState(itemId, isDone);
   }
 
   function handleDoubleClick(event) {
@@ -123,17 +130,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const sub_step_coin_number = getCoinFromCurrentStepOrSubStep(subStep);
     const step_coin_number = getCoinFromCurrentStepOrSubStep(step);
     const subSteps = step.querySelectorAll(".sub-step");
+    const itemId = subStep.dataset.id;
+    let isDone = false;
 
     // Toggle the sub-step
     if (subStep_text.style.textDecoration === "line-through") {
       subStep_text.style.textDecoration = "";
       subStep_text.style.color = "#ccc";
       addToWallet("-"+sub_step_coin_number);
+      isDone = false;
     } else {
       subStep_text.style.textDecoration = "line-through";
       subStep_text.style.color = "#aaa";
       addToWallet(sub_step_coin_number);
+      isDone = true;
     }
+
+    updateItemState(itemId, isDone);
+    
+
 
     // Update step and objective progress
     updateStepProgress(step);
@@ -144,15 +159,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const step = step_text.closest(".step");
     const subSteps_text = step.querySelectorAll(".sub-step_text");
     const step_coin_number = getCoinFromCurrentStepOrSubStep(step);
+    const itemId = step.dataset.id;
+    let isDone = false;
 
     // Toggle the step
     if (step_text.style.textDecoration === "line-through") {
       step_text.style.textDecoration = "";
       step_text.style.color = "#ccc";
+      isDone = false;
       addToWallet("-"+step_coin_number);
       subSteps_text.forEach((subStep_text) => {
         const subStep = subStep_text.closest(".sub-step");
         const sub_step_coin_number = getCoinFromCurrentStepOrSubStep(subStep);
+        const itemId = subStep.dataset.id;
+        let isDone = false;
+        updateItemState(itemId, isDone);
         // subStep_text = subStep.querySelector(".sub-step_text");
         subStep_text.style.textDecoration = "";
         subStep_text.style.color = "#ccc";
@@ -161,16 +182,22 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       step_text.style.textDecoration = "line-through";
       step_text.style.color = "#aaa";
+      isDone = true;
       addToWallet(step_coin_number);
       subSteps_text.forEach((subStep_text) => {
         const subStep = subStep_text.closest(".sub-step");
         const sub_step_coin_number = getCoinFromCurrentStepOrSubStep(subStep);
+        const itemId = subStep.dataset.id;
+        let isDone = true;
+        updateItemState(itemId, isDone);
         // subStep_text = subStep.querySelector(".sub-step_text");
         subStep_text.style.textDecoration = "line-through";
         subStep_text.style.color = "#aaa";
         addToWallet(sub_step_coin_number);
       });
     }
+
+    updateItemState(itemId, isDone);
 
     // Update objective progress
     updateObjectiveProgress(objective);
