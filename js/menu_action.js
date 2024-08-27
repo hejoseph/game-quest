@@ -89,7 +89,7 @@ document.querySelectorAll(".drag").forEach((element) => {
 
 function saveCoin() {
   let tempData = JSON.parse(localStorage.getItem("appData")) || {
-    totalCoin: "0",
+    totalCoin: "0.00",
   };
   tempData.totalCoin = document.querySelector("#total_coin").innerText;
 
@@ -216,7 +216,7 @@ function loadData() {
   document.querySelector(".quest-title").innerText = data.questTitle;
   document.querySelector(".quest-description").innerText =
     data.questDescription;
-  document.querySelector("#total_coin").innerText = data.totalCoin;
+  document.querySelector("#total_coin").innerText = parseFloat(data.totalCoin).toFixed(2);
 
   const objectivesContainer = document.querySelector(".objectives");
   data.objectives.forEach((objData) => {
@@ -278,6 +278,9 @@ function loadData() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+
+  const walletAmountElement = document.getElementById('walletAmount');
+
   function updateObjectiveProgress(objective) {
     const steps = objective.querySelectorAll(".step");
     let totalNodes = 0;
@@ -397,6 +400,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const currentValue = totalCoinElement.textContent;
     let sum = Number(currentValue) + Number(number);
     totalCoinElement.textContent = sum;
+    walletAmountElement.textContent = sum;
     saveCoin();
   }
 
@@ -435,17 +439,17 @@ document.addEventListener("DOMContentLoaded", () => {
     updateObjectiveProgress(objective);
   }
 
-  function crossIt(textItem){
+  function crossIt(textItem) {
     textItem.style.textDecoration = "line-through";
     textItem.style.color = "#aaa";
   }
 
-  function unCrossIt(textItem){
+  function unCrossIt(textItem) {
     textItem.style.textDecoration = "";
     textItem.style.color = "#ccc";
   }
 
-  function isCrossed(textItem){
+  function isCrossed(textItem) {
     return textItem.style.textDecoration === "line-through";
   }
 
@@ -467,7 +471,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const subStepId = subStep.dataset.id;
         let isSubDone = false;
         updateItemState(subStepId, isSubDone);
-        if(isCrossed(subStep_text)){
+        if (isCrossed(subStep_text)) {
           unCrossIt(subStep_text);
           addToWallet("-" + sub_step_coin_number);
         }
@@ -682,19 +686,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function saveNewItem(itemId) {
-    let data = JSON.parse(localStorage.getItem("appData")) || {
-      objectives: [],
-    };
+    // let data = JSON.parse(localStorage.getItem("appData")) || {
+    //   objectives: [],
+    // };
 
-    data.objectives.forEach((objective) => {
-      objective.steps.forEach((step) => {
-        if (step.subSteps) {
-          step.subSteps.push({ id: itemId, done: false });
-        }
-      });
-    });
+    // data.objectives.forEach((objective) => {
+    //   objective.steps.forEach((step) => {
+    //     if (step.subSteps) {
+    //       step.subSteps.push({ id: itemId, done: false });
+    //     }
+    //   });
+    // });
 
-    localStorage.setItem("appData", JSON.stringify(data));
+    // localStorage.setItem("appData", JSON.stringify(data));
   }
 
   // Function to add a new step
@@ -820,6 +824,61 @@ document.addEventListener("DOMContentLoaded", () => {
       window.refreshDeleteObjectiveHook();
     }
   }
+
+  function handleNumberInput(event) {
+    const element = event.target;
+
+    // Ensure the event is for a .coin_number element
+    if (element.classList.contains('coin_number')) {
+        // Save the current cursor position
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        const startOffset = range.startOffset;
+
+        // Replace any non-numeric characters (except for a single period) with an empty string
+        const sanitizedValue = element.innerText.replace(/[^0-9.]/g, '');
+
+        // Allow only one decimal point
+        const valueWithOneDecimal = sanitizedValue.split('.').slice(0, 2).join('.');
+
+        // Update the content with the sanitized value
+        element.innerText = valueWithOneDecimal;
+
+        // If the content is empty, set it to "0"
+        if (element.innerText === '') {
+            element.innerText = '0';
+        }
+
+        // Restore the cursor position
+        const newRange = document.createRange();
+        const textNode = element.firstChild;
+        const newOffset = Math.min(startOffset, textNode.length); // Ensure the offset is within the length of the new text
+
+        newRange.setStart(textNode, newOffset);
+        newRange.setEnd(textNode, newOffset);
+        selection.removeAllRanges();
+        selection.addRange(newRange);
+    }
+}
+
+  // Add event listeners using event delegation
+  document
+    .querySelector(".objectives")
+    .addEventListener("input", handleNumberInput);
+  document.querySelector(".objectives").addEventListener(
+    "blur",
+    function (event) {
+      const element = event.target;
+      // Ensure the event is for a .coin_number element
+      if (
+        element.classList.contains("coin_number") &&
+        element.innerText === ""
+      ) {
+        element.innerText = "0";
+      }
+    },
+    true
+  ); // Use capturing phase to catch blur events
 });
 
 document.getElementById("export-button").addEventListener("click", () => {

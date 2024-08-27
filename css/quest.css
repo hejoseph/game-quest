@@ -179,7 +179,7 @@ p, li {
   margin-left:10px;
 }
 
-.coin_img {
+.steps .coin_img, .coin .coin_img {
   position: relative;
   width: 20px;
   height: 20px;

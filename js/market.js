@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const productList = document.getElementById('productList');
   const inventoryList = document.getElementById('inventoryList');
   const walletAmountElement = document.getElementById('walletAmount');
+  const totalCoinElement = document.getElementById('total_coin');
   const productNameInput = document.getElementById('productName');
   const productCoinsInput = document.getElementById('productCoins');
   const saveProductButton = document.getElementById('saveProduct');
@@ -20,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let isEditMode = false;
   let products = loadData('products') || [];
   let inventory = loadData('inventory') || [];
-  let walletAmount = parseFloat(loadData('walletAmount')) || 50.00; // Allow for decimal values
+  let walletAmount = loadCoin(); // Allow for decimal values
   let currentEditIndex = null;
 
   function updateUI() {
@@ -31,10 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
           li.setAttribute('data-index', index);
 
           li.innerHTML = `
-              ${product.name} - ${product.coins.toFixed(2)} Coins
+              <span>${product.name}  (${product.coins.toFixed(2)} <img class="coin_img" src="images/coin.svg">)</span><span>
               ${isEditMode ? `<button class="btn remove" onclick="removeProduct(${index})">Remove</button>
               <button class="btn edit" onclick="editProduct(${index})">Edit</button>` : `<button class="btn" onclick="buyProduct(${index})">Buy</button>`}
-          `;
+          </span>`;
 
           addDragAndDropHandlers(li, products, 'product');
           productList.appendChild(li);
@@ -46,15 +47,16 @@ document.addEventListener('DOMContentLoaded', () => {
           li.draggable = true;
           li.setAttribute('data-index', index);
           li.innerHTML = `
-              ${item.name} - ${item.coins.toFixed(2)} Coins
+              <span>${item.name}  (${item.coins.toFixed(2)} <img class="coin_img" src="images/coin.svg">)</span><span>
               <button class="btn" onclick="sellProduct(${index})">Sell</button>
               <button class="btn done" onclick="doneWithItem(${index})">Done</button>
-          `;
+          </span>`;
           addDragAndDropHandlers(li, inventory, 'inventory');
           inventoryList.appendChild(li);
       });
 
       walletAmountElement.textContent = walletAmount.toFixed(2);
+      totalCoinElement.textContent = walletAmount.toFixed(2);
 
       editProductForm.classList.toggle('hidden', !isEditMode);
       formTitle.textContent = currentEditIndex !== null ? 'Editing Existing Task' : 'Add New Task';
@@ -64,7 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       saveData('products', products);
       saveData('inventory', inventory);
-      saveData('walletAmount', walletAmount);
+      saveCoin();
+      // saveData('walletAmount', walletAmount);
   }
 
   function addDragAndDropHandlers(item, list, type) {
@@ -98,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.buyProduct = function(index) {
       const product = products[index];
+      walletAmount = loadCoin();
       if (walletAmount >= product.coins) {
           walletAmount -= product.coins;
           inventory.push(product);
@@ -109,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.sellProduct = function(index) {
       const item = inventory[index];
+      walletAmount = loadCoin();
       walletAmount += item.coins;
       inventory.splice(index, 1);
       updateUI();
@@ -151,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
           productCoinsInput.value = '';
           updateUI();
       } else {
-          showModal('Please enter valid product details');
+          showModal('Name cannot be empty, or price must be greater than 0');
       }
   }
 
@@ -165,6 +170,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function saveData(key, data) {
       localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  function loadCoin(){
+    const savedData = JSON.parse(localStorage.getItem("appData"))||{totalCoin:"0.00"};
+    const coin = parseFloat(savedData.totalCoin);
+    walletAmountElement.textContent = coin.toFixed(2);
+    return coin;
   }
 
   function loadData(key) {

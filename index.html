@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Game Quest Interface with Progress Bars</title>
-  <link rel="stylesheet" href="css/quest.css">
   <link rel="stylesheet" href="css/market.css">
+  <link rel="stylesheet" href="css/quest.css">
 </head>
 
 <body>
@@ -48,9 +48,9 @@
   <div class="game-container">
     <header class="header">
       <h1> Task Market</h1>
-      <button id="toggleEditMode" class="btn green">Enable Edit Mode</button>
+      <button id="toggleEditMode" class="edit-mode-btn btn green">Enable Edit Mode</button>
       <div class="wallet">
-        <h2>💰 Wallet: <span id="walletAmount">50</span> Coins</h2>
+        <h2>💰 Wallet: <span id="walletAmount">0</span><img class="coin_img" src="images/coin.svg"></h2>
       </div>
     </header>
 
@@ -77,11 +77,11 @@
     </main>
 
     <footer class="footer">
-      <p>Powered by Game Market Inc. 🎉</p>
+      <p>Made by Joseph 🎉</p>
     </footer>
 
     <!-- Unauthorized Action Modal -->
-    <div id="unauthorizedModal" class="modal hidden">
+    <div id="unauthorizedModal" class="modal-error hidden">
       <div class="modal-content">
         <span id="closeModal" class="close-btn">&times;</span>
         <p id="modalMessage"></p>
