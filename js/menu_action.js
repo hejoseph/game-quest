@@ -98,7 +98,6 @@ function saveCoin() {
 
 function saveData() {
   const objectives = [];
-  console.log(document.querySelectorAll(".objective").length);
   document.querySelectorAll(".objective").forEach((objective) => {
     const objId = objective.dataset.id;
     const objText = objective.querySelector(".objective_text").innerText;
@@ -615,7 +614,6 @@ document.addEventListener("DOMContentLoaded", () => {
   loadProgressBars();
 
   function toggleEditLockIcon(element) {
-    console.log(element.src);
     // Check if currently in edit mode by checking the current icon src or a data attribute
     const isEditMode = element.src.includes("edit");
 
