@@ -85,65 +85,94 @@ document.querySelectorAll(".drag").forEach((element) => {
   });
 });
 
+function saveCoin() {
+  let tempData = JSON.parse(localStorage.getItem("appData")) || {
+    totalCoin: "0",
+  };
+  tempData.totalCoin = document.querySelector("#total_coin").innerText;
+
+  localStorage.setItem("appData", JSON.stringify(tempData));
+}
+
 function saveData() {
   const objectives = [];
-  document.querySelectorAll('.objective').forEach(objective => {
+  console.log(document.querySelectorAll(".objective").length);
+  document.querySelectorAll(".objective").forEach((objective) => {
     const objId = objective.dataset.id;
-    const objText = objective.querySelector('.objective_text').innerText;
-    
+    const objText = objective.querySelector(".objective_text").innerText;
+
     const steps = [];
-    objective.querySelectorAll('.step').forEach(step => {
+    objective.querySelectorAll(".step").forEach((step) => {
       const stepId = step.dataset.id;
-      const stepText = step.querySelector('.step_text').innerText;
-      const coins = step.querySelector('.coin_number').innerText;
+      const stepText = step.querySelector(".step_text");
+      const stepDone =
+        stepText.style.textDecoration === "line-through" ? true : false;
+      const coins = step.querySelector(".coin_number").innerText;
 
       const subSteps = [];
-      step.querySelectorAll('.sub-step').forEach(subStep => {
+      step.querySelectorAll(".sub-step").forEach((subStep) => {
         const subStepId = subStep.dataset.id;
-        const subStepText = subStep.querySelector('.sub-step_text').innerText;
-        const subStepCoins = subStep.querySelector('.coin_number')?.innerText || "0";
-        
-        subSteps.push({ id: subStepId, text: subStepText, coins: subStepCoins });
+        const subStepText = subStep.querySelector(".sub-step_text");
+        const subStepDone =
+          subStepText.style.textDecoration === "line-through" ? true : false;
+        const subStepCoins =
+          subStep.querySelector(".coin_number")?.innerText || "0";
+
+        subSteps.push({
+          id: subStepId,
+          done: subStepDone,
+          text: subStepText.innerText,
+          coins: subStepCoins,
+        });
       });
 
-      steps.push({ id: stepId, text: stepText, coins: coins, subSteps: subSteps });
+      steps.push({
+        id: stepId,
+        done: stepDone,
+        text: stepText.innerText,
+        coins: coins,
+        subSteps: subSteps,
+      });
     });
 
     objectives.push({ id: objId, text: objText, steps: steps });
   });
 
-  localStorage.setItem('appData', JSON.stringify({ 
-    questTitle: document.querySelector('.quest-title').innerText,
-    questDescription: document.querySelector('.quest-description').innerText,
-    totalCoin: document.querySelector('#total_coin').innerText,
-    objectives: objectives
-  }));
-}
-
-function loadProgressBars(){
-    // Get all elements with the class "objective"
-  const objectives = document.querySelectorAll('.objective');
-
-  // Loop through each "objective" element
-  objectives.forEach((objective) => {
-    // updateObjectiveProgress(objective);
-  });
+  localStorage.setItem(
+    "appData",
+    JSON.stringify({
+      questTitle: document.querySelector(".quest-title").innerText,
+      questDescription: document.querySelector(".quest-description").innerText,
+      totalCoin: document.querySelector("#total_coin").innerText,
+      objectives: objectives,
+    })
+  );
 }
 
 function loadState() {
-  const data = JSON.parse(localStorage.getItem('appData'));
+  const savedData = localStorage.getItem("appData");
+  if (savedData === "undefined" || !savedData) return;
+  const data = JSON.parse(savedData);
 
   if (data) {
-    data.objectives.forEach(objData => {
-      objData.steps.forEach(stepData => {
-        const stepElement = document.querySelector(`.step[data-id="${stepData.id}"] .step_text`);
+    data.objectives.forEach((objData) => {
+      objData.steps.forEach((stepData) => {
+        const stepElement = document.querySelector(
+          `.step[data-id="${stepData.id}"] .step_text`
+        );
         if (stepElement) {
-          stepElement.style.textDecoration = stepData.done ? 'line-through' : 'none';
+          stepElement.style.textDecoration = stepData.done
+            ? "line-through"
+            : "none";
         }
-        stepData.subSteps.forEach(subStepData => {
-          const subStepElement = document.querySelector(`.sub-step[data-id="${subStepData.id}"] .sub-step_text`);
+        stepData.subSteps.forEach((subStepData) => {
+          const subStepElement = document.querySelector(
+            `.sub-step[data-id="${subStepData.id}"] .sub-step_text`
+          );
           if (subStepElement) {
-            subStepElement.style.textDecoration = subStepData.done ? 'line-through' : 'none';
+            subStepElement.style.textDecoration = subStepData.done
+              ? "line-through"
+              : "none";
           }
         });
       });
@@ -152,14 +181,14 @@ function loadState() {
 }
 
 function updateItemState(itemId, isDone) {
-  let data = JSON.parse(localStorage.getItem('appData')) || { objectives: [] };
+  let data = JSON.parse(localStorage.getItem("appData")) || { objectives: [] };
 
-  data.objectives.forEach(objective => {
-    objective.steps.forEach(step => {
+  data.objectives.forEach((objective) => {
+    objective.steps.forEach((step) => {
       if (step.id === itemId) {
         step.done = isDone;
       }
-      step.subSteps.forEach(subStep => {
+      step.subSteps.forEach((subStep) => {
         if (subStep.id === itemId) {
           subStep.done = isDone;
         }
@@ -167,25 +196,29 @@ function updateItemState(itemId, isDone) {
     });
   });
 
-  localStorage.setItem('appData', JSON.stringify(data));
+  localStorage.setItem("appData", JSON.stringify(data));
 }
 
 function loadData() {
-  const savedData = localStorage.getItem('appData');
-  if (!savedData) return;
+  const savedData = localStorage.getItem("appData");
+  if (!savedData || savedData === "undefined") {
+    saveData();
+    return;
+  }
 
   const data = JSON.parse(savedData);
 
-  document.querySelector('.quest-title').innerText = data.questTitle;
-  document.querySelector('.quest-description').innerText = data.questDescription;
-  document.querySelector('#total_coin').innerText = data.totalCoin;
+  document.querySelector(".quest-title").innerText = data.questTitle;
+  document.querySelector(".quest-description").innerText =
+    data.questDescription;
+  document.querySelector("#total_coin").innerText = data.totalCoin;
 
-  const objectivesContainer = document.querySelector('.objectives');
-  data.objectives.forEach(objData => {
-    const objectiveElement = document.createElement('div');
-    objectiveElement.classList.add('objective');
+  const objectivesContainer = document.querySelector(".objectives");
+  data.objectives.forEach((objData) => {
+    const objectiveElement = document.createElement("div");
+    objectiveElement.classList.add("objective");
     objectiveElement.dataset.id = objData.id;
-    
+
     objectiveElement.innerHTML = `
       <p class="objective_text" contenteditable="false">${objData.text}</p>
       <div class="menu_container">
@@ -203,8 +236,8 @@ function loadData() {
       </ul>
       <button class="add-step-button">Add Step</button>
     `;
-    
-    objData.steps.forEach(stepData => {
+
+    objData.steps.forEach((stepData) => {
       const stepHTML = `
         <li class="step" data-id="${stepData.id}">
           <span class="step_text" contenteditable="false">${stepData.text}</span>
@@ -215,9 +248,14 @@ function loadData() {
           <button class="add-sub-step-button">Add Sub-Step</button>
         </li>
       `;
-      objectiveElement.querySelector('.steps').insertAdjacentHTML('beforeend', stepHTML);
+      objectiveElement
+        .querySelector(".steps")
+        .insertAdjacentHTML("beforeend", stepHTML);
 
-      stepData.subSteps.forEach(subStepData => {
+      const step = objectiveElement.querySelector(
+        `li[data-id="${stepData.id}"]`
+      );
+      stepData.subSteps.forEach((subStepData) => {
         const subStepHTML = `
           <li class="sub-step" data-id="${subStepData.id}">
             <span class="sub-step_text" contenteditable="false">${subStepData.text}</span>
@@ -225,7 +263,8 @@ function loadData() {
             <img src="images/delete.svg" alt="Delete" class="delete-sub-step" />
           </li>
         `;
-        objectiveElement.querySelector('.sub-steps').insertAdjacentHTML('beforeend', subStepHTML);
+        const subStepsList = step.querySelector(".sub-steps");
+        subStepsList.insertAdjacentHTML("beforeend", subStepHTML);
       });
     });
 
@@ -233,26 +272,352 @@ function loadData() {
   });
 }
 
-
-
 document.addEventListener("DOMContentLoaded", () => {
+  function updateObjectiveProgress(objective) {
+    const steps = objective.querySelectorAll(".step");
+    let totalNodes = 0;
+    let completedNodes = 0;
+
+    steps.forEach((step) => {
+      const subSteps = step.querySelectorAll(".sub-step_text");
+      if (subSteps.length == 0) {
+        totalNodes += 1;
+        step_text = step.querySelector(".step_text");
+        if (step_text.style.textDecoration === "line-through") {
+          completedNodes++;
+        }
+      } else {
+        // Count completed sub-steps
+        const completedSubSteps = Array.from(subSteps).filter(
+          (subStep) => subStep.style.textDecoration === "line-through"
+        ).length;
+        completedNodes += completedSubSteps;
+      }
+      totalNodes += subSteps.length;
+    });
+
+    // Update progress bar
+    const objectiveProgress = objective.querySelector(".progress");
+    const totalNodesCount = totalNodes; // Total nodes (including steps and sub-steps)
+    const progressPercentage =
+      totalNodesCount === 0 ? 0 : (completedNodes / totalNodesCount) * 100;
+    objectiveProgress.style.width = progressPercentage + "%";
+  }
+
+  // Mark the step as done or undone if all sub-steps are completed or not
+  function updateStepProgress(step) {
+    const subSteps = step.querySelectorAll(".sub-step_text");
+    const step_coin_number = getCoinFromCurrentStepOrSubStep(step);
+    const step_text = step.querySelector(".step_text");
+    const itemId = step.dataset.id;
+    let isDone = false;
+
+    const completedSubSteps = Array.from(subSteps).filter(
+      (subStep) => subStep.style.textDecoration === "line-through"
+    ).length;
+    const allSubStepsCompleted = subSteps.length === completedSubSteps;
+
+    if (allSubStepsCompleted) {
+      if (step_text.style.textDecoration == "line-through") {
+      } else {
+        step_text.style.textDecoration = "line-through";
+        step_text.style.color = "#aaa";
+        addToWallet(step_coin_number);
+      }
+      isDone = true;
+    } else {
+      isDone = false;
+      if (step_text.style.textDecoration == "line-through") {
+        addToWallet("-" + step_coin_number);
+        step_text.style.textDecoration = "";
+        step_text.style.color = "#ccc";
+      }
+    }
+
+    updateItemState(itemId, isDone);
+  }
+
+  function handleDoubleClick(event) {
+    return;
+    const target = event.target;
+
+    if (
+      target.classList.contains("objective_text") ||
+      target.classList.contains("step_text") ||
+      target.classList.contains("sub-step_text")
+    ) {
+      const originalText = target.textContent;
+      target.classList.add("editable");
+      target.contentEditable = true;
+      target.focus();
+
+      // Disable click handling while editing
+      document
+        .querySelector(".objectives")
+        .removeEventListener("click", handleClick);
+
+      target.addEventListener(
+        "blur",
+        function () {
+          if (target.textContent.trim() === "") {
+            target.textContent = originalText; // Revert if empty
+          }
+          target.classList.remove("editable");
+          target.contentEditable = false;
+
+          // Re-enable click handling after editing
+          document
+            .querySelector(".objectives")
+            .addEventListener("click", handleClick);
+        },
+        { once: true }
+      );
+    }
+  }
+
+  function getWalletCoin() {
+    const totalCoinElement = document.querySelector("#total_coin");
+    const currentValue = totalCoinElement.textContent;
+    return currentValue;
+  }
+
+  function setWalletCoin(coin_number) {
+    const totalCoinElement = document.querySelector("#total_coin");
+    totalCoinElement.textContent = coin_number;
+  }
+
+  function addToWallet(number) {
+    if (number == "0") return;
+    const totalCoinElement = document.querySelector("#total_coin");
+    const currentValue = totalCoinElement.textContent;
+    let sum = Number(currentValue) + Number(number);
+    totalCoinElement.textContent = sum;
+    saveCoin();
+  }
+
+  function getCoinFromCurrentStepOrSubStep(stepOrSubStep) {
+    return stepOrSubStep.querySelector(".coin_number")
+      ? stepOrSubStep.querySelector(".coin_number").textContent
+      : "0";
+  }
+
+  function onSubStepClicked(subStep_text, objective) {
+    const step = subStep_text.closest(".step");
+    const subStep = subStep_text.closest(".sub-step");
+    const sub_step_coin_number = getCoinFromCurrentStepOrSubStep(subStep);
+    const step_coin_number = getCoinFromCurrentStepOrSubStep(step);
+    const subSteps = step.querySelectorAll(".sub-step");
+    const itemId = subStep.dataset.id;
+    let isDone = false;
+
+    // Toggle the sub-step
+    if (subStep_text.style.textDecoration === "line-through") {
+      subStep_text.style.textDecoration = "";
+      subStep_text.style.color = "#ccc";
+      addToWallet("-" + sub_step_coin_number);
+      isDone = false;
+    } else {
+      subStep_text.style.textDecoration = "line-through";
+      subStep_text.style.color = "#aaa";
+      addToWallet(sub_step_coin_number);
+      isDone = true;
+    }
+
+    updateItemState(itemId, isDone);
+
+    // Update step and objective progress
+    updateStepProgress(step);
+    updateObjectiveProgress(objective);
+  }
+
+  function crossIt(textItem){
+    textItem.style.textDecoration = "line-through";
+    textItem.style.color = "#aaa";
+  }
+
+  function unCrossIt(textItem){
+    textItem.style.textDecoration = "";
+    textItem.style.color = "#ccc";
+  }
+
+  function isCrossed(textItem){
+    return textItem.style.textDecoration === "line-through";
+  }
+
+  function onStepClicked(step_text, objective) {
+    const step = step_text.closest(".step");
+    const subSteps_text = step.querySelectorAll(".sub-step_text");
+    const step_coin_number = getCoinFromCurrentStepOrSubStep(step);
+    const stepId = step.dataset.id;
+    let isStepDone = isCrossed(step_text);
+
+    // Toggle the step
+    if (isStepDone) {
+      unCrossIt(step_text);
+      isStepDone = !isStepDone;
+      addToWallet("-" + step_coin_number);
+      subSteps_text.forEach((subStep_text) => {
+        const subStep = subStep_text.closest(".sub-step");
+        const sub_step_coin_number = getCoinFromCurrentStepOrSubStep(subStep);
+        const subStepId = subStep.dataset.id;
+        let isSubDone = false;
+        updateItemState(subStepId, isSubDone);
+        if(isCrossed(subStep_text)){
+          unCrossIt(subStep_text);
+          addToWallet("-" + sub_step_coin_number);
+        }
+      });
+    } else {
+      crossIt(step_text);
+      isStepDone = true;
+      addToWallet(step_coin_number);
+      subSteps_text.forEach((subStep_text) => {
+        const subStep = subStep_text.closest(".sub-step");
+        const sub_step_coin_number = getCoinFromCurrentStepOrSubStep(subStep);
+        const subStepId = subStep.dataset.id;
+        let isSubDone = true;
+        updateItemState(subStepId, isSubDone);
+        if (!isCrossed(subStep_text)) {
+          addToWallet(sub_step_coin_number);
+          crossIt(subStep_text);
+        }
+      });
+    }
+
+    updateItemState(stepId, isStepDone);
+
+    // Update objective progress
+    updateObjectiveProgress(objective);
+  }
+
+  function handleClick(event) {
+    const objective = event.target.closest(".objective");
+    if (!objective) return; // Ignore clicks outside objectives
+
+    if (
+      event.target.classList.contains("sub-step_text") &&
+      event.target.getAttribute("contenteditable") === "false"
+    ) {
+      onSubStepClicked(event.target, objective);
+    }
+
+    if (
+      event.target.classList.contains("step_text") &&
+      event.target.getAttribute("contenteditable") === "false"
+    ) {
+      onStepClicked(event.target, objective);
+    }
+  }
+
+  function handleDragStart(event) {
+    event.target.classList.add("dragging");
+    event.dataTransfer.setData("text/plain", event.target.dataset.id);
+  }
+
+  function handleDragEnd(event) {
+    event.target.classList.remove("dragging");
+  }
+
+  function handleDragOver(event) {
+    event.preventDefault();
+    const target = event.target;
+    const draggingElement = document.querySelector(".dragging");
+    const isDraggingSubStep = draggingElement.classList.contains("sub-step");
+    const targetIsStep = target.classList.contains("step");
+    const targetIsSubStep = target.classList.contains("sub-step");
+
+    if (isDraggingSubStep && (targetIsStep || targetIsSubStep)) {
+      // Prevent sub-step from being dropped outside its parent step
+      if (
+        targetIsStep ||
+        (targetIsSubStep &&
+          target.closest(".step") === draggingElement.closest(".step"))
+      ) {
+        const afterElement = getDragAfterElement(target, event.clientY);
+        const container = target.parentElement;
+        if (afterElement == null) {
+          container.appendChild(draggingElement);
+        } else {
+          container.insertBefore(draggingElement, afterElement);
+        }
+      }
+    } else if (targetIsStep) {
+      // Allow reordering steps
+      const afterElement = getDragAfterElement(target, event.clientY);
+      const container = target.parentElement;
+      if (afterElement == null) {
+        container.appendChild(draggingElement);
+      } else {
+        container.insertBefore(draggingElement, afterElement);
+      }
+    }
+  }
+
+  function handleDrop(event) {
+    event.preventDefault();
+    handleDragEnd(event);
+  }
+
+  function getDragAfterElement(container, y) {
+    const draggableElements = [
+      ...container.querySelectorAll(".step, .sub-step"),
+    ].filter((el) => el !== document.querySelector(".dragging"));
+    return draggableElements.reduce(
+      (closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      },
+      { offset: Number.NEGATIVE_INFINITY }
+    ).element;
+  }
+
+  document
+    .querySelector(".objectives")
+    .addEventListener("dblclick", handleDoubleClick);
+  document.querySelector(".objectives").addEventListener("click", handleClick);
+
+  // Enable drag and drop
+  document.querySelectorAll(".step, .sub-step").forEach((item) => {
+    item.addEventListener("dragstart", handleDragStart);
+    item.addEventListener("dragend", handleDragEnd);
+    item.addEventListener("dragover", handleDragOver);
+    item.addEventListener("drop", handleDrop);
+    item.setAttribute("draggable", true);
+  });
+
   loadData();
   loadState();
+
+  function loadProgressBars() {
+    // Get all elements with the class "objective"
+    const objectives = document.querySelectorAll(".objective");
+
+    // Loop through each "objective" element
+    objectives.forEach((objective) => {
+      updateObjectiveProgress(objective);
+    });
+  }
+
   loadProgressBars();
 
-  function toggleEditLockIcon(element){
+  function toggleEditLockIcon(element) {
     console.log(element.src);
     // Check if currently in edit mode by checking the current icon src or a data attribute
     const isEditMode = element.src.includes("edit");
 
     // Toggle the mode
     if (isEditMode) {
-        // Switch to lock mode
-        element.src = "images/lock.svg"; // Set to lock icon
-        
+      // Switch to lock mode
+      element.src = "images/lock.svg"; // Set to lock icon
+      // saveData();
     } else {
-        // Switch to edit mode
-        element.src = "images/edit.svg"; // Set to edit icon
+      // Switch to edit mode
+      element.src = "images/edit.svg"; // Set to edit icon
     }
   }
 
@@ -272,8 +637,9 @@ document.addEventListener("DOMContentLoaded", () => {
       textElements.forEach((el) => el.setAttribute("contenteditable", "true"));
     } else {
       objectiveElement.classList.remove("edit-mode");
-      saveData();
       textElements.forEach((el) => el.setAttribute("contenteditable", "false"));
+      saveData();
+      loadProgressBars();
     }
 
     deleteButtons.forEach(
@@ -311,17 +677,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function saveNewItem(itemId) {
-    let data = JSON.parse(localStorage.getItem('appData')) || { objectives: [] };
-  
-    data.objectives.forEach(objective => {
-      objective.steps.forEach(step => {
+    let data = JSON.parse(localStorage.getItem("appData")) || {
+      objectives: [],
+    };
+
+    data.objectives.forEach((objective) => {
+      objective.steps.forEach((step) => {
         if (step.subSteps) {
           step.subSteps.push({ id: itemId, done: false });
         }
       });
     });
-  
-    localStorage.setItem('appData', JSON.stringify(data));
+
+    localStorage.setItem("appData", JSON.stringify(data));
   }
 
   // Function to add a new step
@@ -398,7 +766,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const newObjective = document.createElement("div");
     const stepId = generateUniqueId("step");
     const subStepId = generateUniqueId("sub-step");
+    const objId = generateUniqueId("objective");
     newObjective.classList.add("objective");
+    newObjective.dataset.id = objId;
 
     newObjective.innerHTML = `
           <p class="objective_text" contenteditable="true">New Objective</p>
@@ -447,55 +817,65 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-
-
-document.getElementById('export-button').addEventListener('click', () => {
+document.getElementById("export-button").addEventListener("click", () => {
   const data = {
-    questTitle: document.querySelector('.quest-title').innerText,
-    questDescription: document.querySelector('.quest-description').innerText,
-    totalCoin: document.querySelector('#total_coin').innerText,
-    objectives: []
+    questTitle: document.querySelector(".quest-title").innerText,
+    questDescription: document.querySelector(".quest-description").innerText,
+    totalCoin: document.querySelector("#total_coin").innerText,
+    objectives: [],
   };
 
-  document.querySelectorAll('.objective').forEach(objective => {
+  document.querySelectorAll(".objective").forEach((objective) => {
     const objId = objective.dataset.id;
-    const objText = objective.querySelector('.objective_text').innerText;
-    
+    const objText = objective.querySelector(".objective_text").innerText;
+
     const steps = [];
-    objective.querySelectorAll('.step').forEach(step => {
+    objective.querySelectorAll(".step").forEach((step) => {
       const stepId = step.dataset.id;
-      const stepText = step.querySelector('.step_text').innerText;
-      const coins = step.querySelector('.coin_number').innerText;
+      const stepText = step.querySelector(".step_text").innerText;
+      const coins = step.querySelector(".coin_number").innerText;
 
       const subSteps = [];
-      step.querySelectorAll('.sub-step').forEach(subStep => {
+      step.querySelectorAll(".sub-step").forEach((subStep) => {
         const subStepId = subStep.dataset.id;
-        const subStepText = subStep.querySelector('.sub-step_text').innerText;
-        const subStepCoins = subStep.querySelector('.coin_number')?.innerText || "0";
-        
-        subSteps.push({ id: subStepId, text: subStepText, coins: subStepCoins });
+        const subStepText = subStep.querySelector(".sub-step_text").innerText;
+        const subStepCoins =
+          subStep.querySelector(".coin_number")?.innerText || "0";
+
+        subSteps.push({
+          id: subStepId,
+          text: subStepText,
+          coins: subStepCoins,
+        });
       });
 
-      steps.push({ id: stepId, text: stepText, coins: coins, subSteps: subSteps });
+      steps.push({
+        id: stepId,
+        text: stepText,
+        coins: coins,
+        subSteps: subSteps,
+      });
     });
 
     data.objectives.push({ id: objId, text: objText, steps: steps });
   });
 
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type: "application/json",
+  });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
-  a.download = 'appData.json';
+  a.download = "appData.json";
   a.click();
   URL.revokeObjectURL(url);
 });
 
-document.getElementById('import-button').addEventListener('click', () => {
-  document.getElementById('import-file').click();
+document.getElementById("import-button").addEventListener("click", () => {
+  document.getElementById("import-file").click();
 });
 
-document.getElementById('import-file').addEventListener('change', (event) => {
+document.getElementById("import-file").addEventListener("change", (event) => {
   const file = event.target.files[0];
   if (!file) return;
 
@@ -504,18 +884,19 @@ document.getElementById('import-file').addEventListener('change', (event) => {
     try {
       const data = JSON.parse(e.target.result);
 
-      document.querySelector('.quest-title').innerText = data.questTitle;
-      document.querySelector('.quest-description').innerText = data.questDescription;
-      document.querySelector('#total_coin').innerText = data.totalCoin;
+      document.querySelector(".quest-title").innerText = data.questTitle;
+      document.querySelector(".quest-description").innerText =
+        data.questDescription;
+      document.querySelector("#total_coin").innerText = data.totalCoin;
 
-      const objectivesContainer = document.querySelector('.objectives');
-      objectivesContainer.innerHTML = ''; // Clear existing objectives
+      const objectivesContainer = document.querySelector(".objectives");
+      objectivesContainer.innerHTML = ""; // Clear existing objectives
 
-      data.objectives.forEach(objData => {
-        const objectiveElement = document.createElement('div');
-        objectiveElement.classList.add('objective');
+      data.objectives.forEach((objData) => {
+        const objectiveElement = document.createElement("div");
+        objectiveElement.classList.add("objective");
         objectiveElement.dataset.id = objData.id;
-        
+
         objectiveElement.innerHTML = `
           <p class="objective_text" contenteditable="true">${objData.text}</p>
           <div class="menu_container">
@@ -534,7 +915,7 @@ document.getElementById('import-file').addEventListener('change', (event) => {
           <button class="add-step-button">Add Step</button>
         `;
 
-        objData.steps.forEach(stepData => {
+        objData.steps.forEach((stepData) => {
           const stepHTML = `
             <li class="step" data-id="${stepData.id}">
               <span class="step_text" contenteditable="false">${stepData.text}</span>
@@ -545,9 +926,11 @@ document.getElementById('import-file').addEventListener('change', (event) => {
               <button class="add-sub-step-button">Add Sub-Step</button>
             </li>
           `;
-          objectiveElement.querySelector('.steps').insertAdjacentHTML('beforeend', stepHTML);
+          objectiveElement
+            .querySelector(".steps")
+            .insertAdjacentHTML("beforeend", stepHTML);
 
-          stepData.subSteps.forEach(subStepData => {
+          stepData.subSteps.forEach((subStepData) => {
             const subStepHTML = `
               <li class="sub-step" data-id="${subStepData.id}">
                 <span class="sub-step_text" contenteditable="false">${subStepData.text}</span>
@@ -555,17 +938,17 @@ document.getElementById('import-file').addEventListener('change', (event) => {
                 <img src="images/delete.svg" alt="Delete" class="delete-sub-step" />
               </li>
             `;
-            objectiveElement.querySelector('.sub-steps').insertAdjacentHTML('beforeend', subStepHTML);
+            objectiveElement
+              .querySelector(".sub-steps")
+              .insertAdjacentHTML("beforeend", subStepHTML);
           });
         });
 
         objectivesContainer.appendChild(objectiveElement);
       });
-
     } catch (error) {
-      alert('Failed to load data: ' + error.message);
+      alert("Failed to load data: " + error.message);
     }
   };
   reader.readAsText(file);
 });
-

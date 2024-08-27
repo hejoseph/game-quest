@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (itemToDelete) {
       itemToDelete.remove();
       closeModal();
+      saveData();
     }
   });
 
