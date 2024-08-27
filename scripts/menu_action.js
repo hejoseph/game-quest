@@ -76,6 +76,8 @@ document.addEventListener("mouseup", () => {
   itemSiblings.forEach((sibling) => {
     sibling.style.marginTop = "10px";
   });
+
+  saveData();
 });
 
 // Extra: Prevent drag over behavior
@@ -138,12 +140,15 @@ function saveData() {
     objectives.push({ id: objId, text: objText, steps: steps });
   });
 
+  var totalCoin = document.querySelector("#total_coin").innerText;
+  totalCoin = totalCoin === "" ? "0" : totalCoin;
+
   localStorage.setItem(
     "appData",
     JSON.stringify({
       questTitle: document.querySelector(".quest-title").innerText,
       questDescription: document.querySelector(".quest-description").innerText,
-      totalCoin: document.querySelector("#total_coin").innerText,
+      totalCoin: totalCoin,
       objectives: objectives,
     })
   );
