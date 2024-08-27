@@ -1,0 +1,288 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to bottom, #1e2a38, #3b4a5e);
+    margin: 0;
+    padding: 0;
+    color: #f4f4f4;
+}
+
+.game-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+.header {
+    background: linear-gradient(to right, #ff6f61, #ffcc70);
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.header .btn {
+    background-color: #4a90e2;
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 8px;
+    margin-top: 10px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.header .btn:hover {
+    background-color: #357abd;
+    transform: scale(1.05);
+}
+
+.header .edit-mode-btn {
+    background-color: #e94e77;
+}
+
+.header .edit-mode-btn:hover {
+    background-color: #d43f60;
+}
+
+.wallet {
+    margin-top: 10px;
+}
+
+.main {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.market, .inventory {
+    width: 48%;
+    background: #2b3a45;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.market h2, .inventory h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+.product-list, .inventory-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.product-list li, .inventory-list li {
+    background: #344a57;
+    border: 1px solid #2b3a45;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s, transform 0.3s;
+
+}
+
+.product-list li:hover, .inventory-list li:hover {
+    background-color: #3e5f6b;
+    transform: scale(1.02);
+    cursor:move;
+}
+
+.product-list button, .inventory-list button {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 8px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.product-list button.remove {
+    background-color: #e94e77;
+}
+
+.product-list button.remove:hover {
+    background-color: #d43f60;
+}
+
+.inventory-list button:hover {
+    background-color: #357abd;
+}
+
+.edit-form {
+    margin-top: 20px;
+    padding: 20px;
+    background: #3b4a5e;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.edit-form input {
+    padding: 12px;
+    margin: 5px 0;
+    border: 1px solid #2b3a45;
+    border-radius: 8px;
+    width: calc(100% - 24px);
+    background: #344a57;
+    color: #fff;
+}
+
+.edit-form button {
+    margin: 5px;
+    padding: 10px 20px;
+}
+
+.edit-form .save-btn {
+    background-color: #4a90e2;
+}
+
+.edit-form .save-btn:hover {
+    background-color: #357abd;
+}
+
+.edit-form .cancel-btn {
+    background-color: #e94e77;
+}
+
+.edit-form .cancel-btn:hover {
+    background-color: #d43f60;
+}
+
+.footer {
+    margin-top: 20px;
+    text-align: center;
+    color: #ddd;
+}
+
+.hidden {
+    display: none;
+}
+
+/* styles.css */
+
+/* Existing styles for input fields in the Add/Edit form */
+.edit-form input[type="text"],
+.edit-form input[type="number"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Apply the same styles to the in-list edit fields */
+.product-list .edit-input {
+    width: auto; /* Adjust width for inline elements */
+    padding: 5px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Style for the buttons */
+.btn {
+    margin: 0 5px;
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn.remove {
+    background-color: #f44336;
+}
+
+.btn.edit {
+    background-color: #ff9800;
+}
+
+
+.btn {
+    padding: 8px 12px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Style for the 'Done' button in red */
+.done {
+    background-color: #dc3545; /* Red color for done */
+    color: white;
+}
+
+/* Green color for 'Enable Edit Mode' button when not in edit mode */
+.edit-mode-btn.green {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+
+/* Red color for 'Enable Edit Mode' button when in edit mode */
+.edit-mode-btn.red {
+    background-color: #dc3545; /* Red */
+    color: white;
+}
+
+/* Shining border effect */
+@keyframes shine {
+    0% {
+        border-color: #f0e68c;
+        box-shadow: 0 0 10px #f0e68c;
+    }
+    100% {
+        border-color: transparent;
+        box-shadow: none;
+    }
+}
+
+.shining-border {
+    animation: shine 2s ease-in-out;
+    border: 2px solid #f0e68c; /* Make sure the border is visible */
+    box-shadow: 0 0 10px #f0e68c;
+}
+
+/* Modal styles */
+
+.modal-content {
+    background-color: #1e2a38;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 5px;
+    width: 300px;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.close-btn {
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: red;
+}
