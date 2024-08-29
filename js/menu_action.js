@@ -153,9 +153,7 @@ function saveData() {
   );
 }
 
-function loadState() {
-  const savedData = localStorage.getItem("appData");
-  if (savedData === "undefined" || !savedData) return;
+function loadStateWith(savedData) {
   const data = JSON.parse(savedData);
 
   if (data) {
@@ -164,24 +162,36 @@ function loadState() {
         const stepElement = document.querySelector(
           `.step[data-id="${stepData.id}"] .step_text`
         );
-        if (stepElement) {
-          stepElement.style.textDecoration = stepData.done
-            ? "line-through"
-            : "none";
+        if (stepElement && stepData.done) {
+          crossIt(stepElement);
         }
         stepData.subSteps.forEach((subStepData) => {
           const subStepElement = document.querySelector(
             `.sub-step[data-id="${subStepData.id}"] .sub-step_text`
           );
-          if (subStepElement) {
-            subStepElement.style.textDecoration = subStepData.done
-              ? "line-through"
-              : "none";
+          if (subStepElement && subStepData.done) {
+            crossIt(subStepElement);
           }
         });
       });
     });
   }
+}
+
+function loadProgressBars() {
+  // Get all elements with the class "objective"
+  const objectives = document.querySelectorAll(".objective");
+
+  // Loop through each "objective" element
+  objectives.forEach((objective) => {
+    updateObjectiveProgress(objective);
+  });
+}
+
+function loadState() {
+  const savedData = localStorage.getItem("appData");
+  if (savedData === "undefined" || !savedData) return;
+  loadStateWith(savedData);
 }
 
 function updateItemState(itemId, isDone) {
@@ -203,19 +213,15 @@ function updateItemState(itemId, isDone) {
   localStorage.setItem("appData", JSON.stringify(data));
 }
 
-function loadData() {
-  const savedData = localStorage.getItem("appData");
-  if (!savedData || savedData === "undefined") {
-    saveData();
-    return;
-  }
-
+function loadDataWith(savedData) {
   const data = JSON.parse(savedData);
 
   document.querySelector(".quest-title").innerText = data.questTitle;
   document.querySelector(".quest-description").innerText =
     data.questDescription;
-  document.querySelector("#total_coin").innerText = parseFloat(data.totalCoin).toFixed(2);
+  document.querySelector("#total_coin").innerText = parseFloat(
+    data.totalCoin
+  ).toFixed(2);
 
   const objectivesContainer = document.querySelector(".objectives");
   data.objectives.forEach((objData) => {
@@ -276,40 +282,96 @@ function loadData() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-
-  const walletAmountElement = document.getElementById('walletAmount');
-
-  function updateObjectiveProgress(objective) {
-    const steps = objective.querySelectorAll(".step");
-    let totalNodes = 0;
-    let completedNodes = 0;
-
-    steps.forEach((step) => {
-      const subSteps = step.querySelectorAll(".sub-step_text");
-      if (subSteps.length == 0) {
-        totalNodes += 1;
-        step_text = step.querySelector(".step_text");
-        if (step_text.style.textDecoration === "line-through") {
-          completedNodes++;
-        }
-      } else {
-        // Count completed sub-steps
-        const completedSubSteps = Array.from(subSteps).filter(
-          (subStep) => subStep.style.textDecoration === "line-through"
-        ).length;
-        completedNodes += completedSubSteps;
-      }
-      totalNodes += subSteps.length;
-    });
-
-    // Update progress bar
-    const objectiveProgress = objective.querySelector(".progress");
-    const totalNodesCount = totalNodes; // Total nodes (including steps and sub-steps)
-    const progressPercentage =
-      totalNodesCount === 0 ? 0 : (completedNodes / totalNodesCount) * 100;
-    objectiveProgress.style.width = progressPercentage + "%";
+function loadData() {
+  const savedData = localStorage.getItem("appData");
+  if (!savedData || savedData === "undefined") {
+    saveData();
+    return;
   }
+  loadDataWith(savedData);
+}
+
+function crossIt(textItem) {
+  textItem.style.textDecoration = "line-through";
+  textItem.style.color = "#aaa";
+}
+
+function unCrossIt(textItem) {
+  textItem.style.textDecoration = "";
+  textItem.style.color = "#ccc";
+}
+
+function isCrossed(textItem) {
+  return textItem.style.textDecoration === "line-through";
+}
+
+function clearObjectives() {
+  const objectivesDiv = document.querySelector(".objectives");
+  objectivesDiv.innerHTML = "";
+}
+
+function updateObjectiveProgress(objective) {
+  const steps = objective.querySelectorAll(".step");
+  let totalNodes = 0;
+  let completedNodes = 0;
+
+  steps.forEach((step) => {
+    const subSteps = step.querySelectorAll(".sub-step_text");
+    if (subSteps.length == 0) {
+      totalNodes += 1;
+      step_text = step.querySelector(".step_text");
+      if (step_text.style.textDecoration === "line-through") {
+        completedNodes++;
+      }
+    } else {
+      // Count completed sub-steps
+      const completedSubSteps = Array.from(subSteps).filter(
+        (subStep) => subStep.style.textDecoration === "line-through"
+      ).length;
+      completedNodes += completedSubSteps;
+    }
+    totalNodes += subSteps.length;
+  });
+
+  // Update progress bar
+  const objectiveProgress = objective.querySelector(".progress");
+  const totalNodesCount = totalNodes; // Total nodes (including steps and sub-steps)
+  const progressPercentage =
+    totalNodesCount === 0 ? 0 : (completedNodes / totalNodesCount) * 100;
+  objectiveProgress.style.width = progressPercentage + "%";
+}
+
+function refreshHookMiniMaximize() {
+  const toggleIcons = document.querySelectorAll(".toggle-visibility");
+
+  // Loop through each toggle icon
+  toggleIcons.forEach((icon) => {
+    icon.addEventListener("click", () => {
+      // Get the closest parent .objective div
+      const objectiveDiv = icon.closest(".objective");
+
+      // Get the .steps element within the current .objective
+      const stepsList = objectiveDiv.querySelector(".steps");
+      const addStepBtn = objectiveDiv.querySelector(".add-step-button");
+
+      // Toggle the display of the steps list
+      if (stepsList.style.display === "none") {
+        stepsList.style.display = "block"; // Show steps
+        // addStepBtn.style.display = "block";
+        icon.src = "images/hide.svg"; // Change icon to "hide"
+        icon.alt = "Hide";
+      } else {
+        stepsList.style.display = "none"; // Hide steps
+        // addStepBtn.style.display = "block";
+        icon.src = "images/show.svg"; // Change icon to "show"
+        icon.alt = "Show";
+      }
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const walletAmountElement = document.getElementById("walletAmount");
 
   // Mark the step as done or undone if all sub-steps are completed or not
   function updateStepProgress(step) {
@@ -436,20 +498,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Update step and objective progress
     updateStepProgress(step);
     updateObjectiveProgress(objective);
-  }
-
-  function crossIt(textItem) {
-    textItem.style.textDecoration = "line-through";
-    textItem.style.color = "#aaa";
-  }
-
-  function unCrossIt(textItem) {
-    textItem.style.textDecoration = "";
-    textItem.style.color = "#ccc";
-  }
-
-  function isCrossed(textItem) {
-    return textItem.style.textDecoration === "line-through";
   }
 
   function onStepClicked(step_text, objective) {
@@ -601,16 +649,6 @@ document.addEventListener("DOMContentLoaded", () => {
   loadData();
   loadState();
 
-  function loadProgressBars() {
-    // Get all elements with the class "objective"
-    const objectives = document.querySelectorAll(".objective");
-
-    // Loop through each "objective" element
-    objectives.forEach((objective) => {
-      updateObjectiveProgress(objective);
-    });
-  }
-
   loadProgressBars();
 
   function toggleEditLockIcon(element) {
@@ -687,7 +725,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // let data = JSON.parse(localStorage.getItem("appData")) || {
     //   objectives: [],
     // };
-
     // data.objectives.forEach((objective) => {
     //   objective.steps.forEach((step) => {
     //     if (step.subSteps) {
@@ -695,7 +732,6 @@ document.addEventListener("DOMContentLoaded", () => {
     //     }
     //   });
     // });
-
     // localStorage.setItem("appData", JSON.stringify(data));
   }
 
@@ -734,34 +770,7 @@ document.addEventListener("DOMContentLoaded", () => {
     saveNewItem(subStepId);
   }
 
-  function refreshHookMiniMaximize() {
-    const toggleIcons = document.querySelectorAll(".toggle-visibility");
-
-    // Loop through each toggle icon
-    toggleIcons.forEach((icon) => {
-      icon.addEventListener("click", () => {
-        // Get the closest parent .objective div
-        const objectiveDiv = icon.closest(".objective");
-
-        // Get the .steps element within the current .objective
-        const stepsList = objectiveDiv.querySelector(".steps");
-        const addStepBtn = objectiveDiv.querySelector(".add-step-button");
-
-        // Toggle the display of the steps list
-        if (stepsList.style.display === "none") {
-          stepsList.style.display = "block"; // Show steps
-          // addStepBtn.style.display = "block";
-          icon.src = "images/hide.svg"; // Change icon to "hide"
-          icon.alt = "Hide";
-        } else {
-          stepsList.style.display = "none"; // Hide steps
-          // addStepBtn.style.display = "block";
-          icon.src = "images/show.svg"; // Change icon to "show"
-          icon.alt = "Show";
-        }
-      });
-    });
-  }
+  
   refreshHookMiniMaximize();
 
   // Add Objective
@@ -827,37 +836,40 @@ document.addEventListener("DOMContentLoaded", () => {
     const element = event.target;
 
     // Ensure the event is for a .coin_number element
-    if (element.classList.contains('coin_number')) {
-        // Save the current cursor position
-        const selection = window.getSelection();
-        const range = selection.getRangeAt(0);
-        const startOffset = range.startOffset;
+    if (element.classList.contains("coin_number")) {
+      // Save the current cursor position
+      const selection = window.getSelection();
+      const range = selection.getRangeAt(0);
+      const startOffset = range.startOffset;
 
-        // Replace any non-numeric characters (except for a single period) with an empty string
-        const sanitizedValue = element.innerText.replace(/[^0-9.]/g, '');
+      // Replace any non-numeric characters (except for a single period) with an empty string
+      const sanitizedValue = element.innerText.replace(/[^0-9.]/g, "");
 
-        // Allow only one decimal point
-        const valueWithOneDecimal = sanitizedValue.split('.').slice(0, 2).join('.');
+      // Allow only one decimal point
+      const valueWithOneDecimal = sanitizedValue
+        .split(".")
+        .slice(0, 2)
+        .join(".");
 
-        // Update the content with the sanitized value
-        element.innerText = valueWithOneDecimal;
+      // Update the content with the sanitized value
+      element.innerText = valueWithOneDecimal;
 
-        // If the content is empty, set it to "0"
-        if (element.innerText === '') {
-            element.innerText = '0';
-        }
+      // If the content is empty, set it to "0"
+      if (element.innerText === "") {
+        element.innerText = "0";
+      }
 
-        // Restore the cursor position
-        const newRange = document.createRange();
-        const textNode = element.firstChild;
-        const newOffset = Math.min(startOffset, textNode.length); // Ensure the offset is within the length of the new text
+      // Restore the cursor position
+      const newRange = document.createRange();
+      const textNode = element.firstChild;
+      const newOffset = Math.min(startOffset, textNode.length); // Ensure the offset is within the length of the new text
 
-        newRange.setStart(textNode, newOffset);
-        newRange.setEnd(textNode, newOffset);
-        selection.removeAllRanges();
-        selection.addRange(newRange);
+      newRange.setStart(textNode, newOffset);
+      newRange.setEnd(textNode, newOffset);
+      selection.removeAllRanges();
+      selection.addRange(newRange);
     }
-}
+  }
 
   // Add event listeners using event delegation
   document
@@ -894,28 +906,32 @@ document.getElementById("export-button").addEventListener("click", () => {
     const steps = [];
     objective.querySelectorAll(".step").forEach((step) => {
       const stepId = step.dataset.id;
-      const stepText = step.querySelector(".step_text").innerText;
+      const stepText = step.querySelector(".step_text");
       const coins = step.querySelector(".coin_number").innerText;
+      const stepDone = isCrossed(stepText);
 
       const subSteps = [];
       step.querySelectorAll(".sub-step").forEach((subStep) => {
         const subStepId = subStep.dataset.id;
-        const subStepText = subStep.querySelector(".sub-step_text").innerText;
+        const subStepText = subStep.querySelector(".sub-step_text");
         const subStepCoins =
           subStep.querySelector(".coin_number")?.innerText || "0";
+        const subStepDone = isCrossed(subStepText);
 
         subSteps.push({
           id: subStepId,
-          text: subStepText,
+          text: subStepText.innerText,
           coins: subStepCoins,
+          done: subStepDone,
         });
       });
 
       steps.push({
         id: stepId,
-        text: stepText,
+        text: stepText.innerText,
         coins: coins,
         subSteps: subSteps,
+        done: stepDone,
       });
     });
 
@@ -937,6 +953,12 @@ document.getElementById("import-button").addEventListener("click", () => {
   document.getElementById("import-file").click();
 });
 
+function refreshDeleteButtonHook(){
+  if (typeof window.refreshDeleteObjectiveHook === "function") {
+    window.refreshDeleteObjectiveHook();
+  }
+}
+
 document.getElementById("import-file").addEventListener("change", (event) => {
   const file = event.target.files[0];
   if (!file) return;
@@ -944,70 +966,12 @@ document.getElementById("import-file").addEventListener("change", (event) => {
   const reader = new FileReader();
   reader.onload = (e) => {
     try {
-      const data = JSON.parse(e.target.result);
-
-      document.querySelector(".quest-title").innerText = data.questTitle;
-      document.querySelector(".quest-description").innerText =
-        data.questDescription;
-      document.querySelector("#total_coin").innerText = data.totalCoin;
-
-      const objectivesContainer = document.querySelector(".objectives");
-      objectivesContainer.innerHTML = ""; // Clear existing objectives
-
-      data.objectives.forEach((objData) => {
-        const objectiveElement = document.createElement("div");
-        objectiveElement.classList.add("objective");
-        objectiveElement.dataset.id = objData.id;
-
-        objectiveElement.innerHTML = `
-          <p class="objective_text" contenteditable="true">${objData.text}</p>
-          <div class="menu_container">
-            <div class="menu_action">
-              <img src="images/hide.svg" alt="Hide" class="toggle-visibility"/>
-              <img src="images/edit.svg" alt="Edit" class="edit-button"/>
-              <img src="images/delete.svg" class="delete-objective" alt="Delete_objective" />
-              <img class="drag" src="images/drag.svg" alt="Drag" draggable="false"/>
-            </div>
-          </div>
-          <div class="progress-bar">
-            <div class="progress" style="width: 0%;"></div>
-          </div>
-          <ul class="steps">
-          </ul>
-          <button class="add-step-button">Add Step</button>
-        `;
-
-        objData.steps.forEach((stepData) => {
-          const stepHTML = `
-            <li class="step" data-id="${stepData.id}">
-              <span class="step_text" contenteditable="false">${stepData.text}</span>
-              <span class="coin"><span class="coin_number" contenteditable="false">${stepData.coins}</span><img class="coin_img" src="images/coin.svg"></span>
-              <img src="images/delete.svg" alt="Delete" class="delete-step" />
-              <ul class="sub-steps">
-              </ul>
-              <button class="add-sub-step-button">Add Sub-Step</button>
-            </li>
-          `;
-          objectiveElement
-            .querySelector(".steps")
-            .insertAdjacentHTML("beforeend", stepHTML);
-
-          stepData.subSteps.forEach((subStepData) => {
-            const subStepHTML = `
-              <li class="sub-step" data-id="${subStepData.id}">
-                <span class="sub-step_text" contenteditable="false">${subStepData.text}</span>
-                <span class="coin"><span class="coin_number" contenteditable="true">${subStepData.coins}</span><img class="coin_img" src="images/coin.svg"></span>
-                <img src="images/delete.svg" alt="Delete" class="delete-sub-step" />
-              </li>
-            `;
-            objectiveElement
-              .querySelector(".sub-steps")
-              .insertAdjacentHTML("beforeend", subStepHTML);
-          });
-        });
-
-        objectivesContainer.appendChild(objectiveElement);
-      });
+      clearObjectives();
+      loadDataWith(e.target.result);
+      loadStateWith(e.target.result);
+      loadProgressBars();
+      refreshDeleteButtonHook();
+      refreshHookMiniMaximize();
     } catch (error) {
       alert("Failed to load data: " + error.message);
     }
